@@ -92,6 +92,7 @@ namespace DynamicCallouts
                 STP = false;
             }
             Functions.RegisterCallout(typeof(IndividualShoutingAtPeople));
+            Functions.RegisterCallout(typeof(ATMRobbery));
             Game.Console.Print("[LOG]: All callouts were loaded!");
             Game.Console.Print();
             Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");

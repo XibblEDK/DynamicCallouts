@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalloutInterfaceFunctions.cs" />
+    <Compile Include="Callouts\ATMRobbery.cs" />
     <Compile Include="Callouts\IndividualShoutingAtPeople.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Menu.cs" />

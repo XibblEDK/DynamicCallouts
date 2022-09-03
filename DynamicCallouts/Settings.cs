@@ -30,6 +30,6 @@ namespace DynamicCallouts
             LeaveCalloutsRunning = ini.ReadBoolean("Miscellaneous", "LeaveCalloutsRunning", false);
             AutomaticBackup = ini.ReadBoolean("Miscellaneous", "AutomaticBackup", true);
         }
-        public static readonly string PluginVersion = "1.0.5.1";
+        public static readonly string PluginVersion = "1.0.0.0";
     }
 }

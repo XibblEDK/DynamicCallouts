@@ -13,7 +13,7 @@ using DynamicCallouts.VersionChecker;
 
 namespace DynamicCallouts.Callouts
 {
-    [CalloutInfo("[DC] Individual Shouting at People", CalloutProbability.High)]
+    [CalloutInfo("[DYNC] Individual Shouting at People", CalloutProbability.High)]
 
     public class IndividualShoutingAtPeople : Callout
     {
@@ -117,14 +117,14 @@ namespace DynamicCallouts.Callouts
             AddMinimumDistanceCheck(30f, VictimSpawnPoint);
             AddMaximumDistanceCheck(600f, VictimSpawnPoint);
             Functions.PlayScannerAudio("CITIZENS_REPORT_01 CRIME_DISTURBING_THE_PEACE_01");
-            CalloutMessage = "Individual Shouting At People";
+            CalloutMessage = "[DC] Individual Shouting At People";
             CalloutPosition = VictimSpawnPoint;
             CalloutAdvisory = "Suspect is Reported to have ~y~Aggresively Shouted~w~ at Multiple Citizens.";
 
             return base.OnBeforeCalloutDisplayed();
         }
 
-        public override bool OnCalloutAccepted()
+        public override void OnCalloutDisplayed()
         {
             if (Main.CalloutInterface)
             {
@@ -135,6 +135,11 @@ namespace DynamicCallouts.Callouts
                 Game.DisplayNotification("Respond with ~y~Code 2~w~.");
             }
 
+            base.OnCalloutDisplayed();
+        }
+
+        public override bool OnCalloutAccepted()
+        {
             Victim = new Ped(VictimSpawnPoint);
             Victim.IsPersistent = true;
             Victim.BlockPermanentEvents = true;
