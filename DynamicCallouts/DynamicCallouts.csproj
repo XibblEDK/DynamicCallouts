@@ -86,12 +86,14 @@
   <ItemGroup>
     <Compile Include="CalloutInterfaceFunctions.cs" />
     <Compile Include="Callouts\ATMRobbery.cs" />
+    <Compile Include="Callouts\HouseRaid.cs" />
     <Compile Include="Callouts\IndividualShoutingAtPeople.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utilities\CallHandler.cs" />
+    <Compile Include="Utilities\CalloutList.cs" />
     <Compile Include="Utilities\EndCalloutHandler.cs" />
     <Compile Include="Utilities\Vector3Extension.cs" />
     <Compile Include="VersionChecker\PluginCheck.cs" />

@@ -117,7 +117,7 @@ namespace DynamicCallouts.Callouts
             AddMinimumDistanceCheck(30f, VictimSpawnPoint);
             AddMaximumDistanceCheck(600f, VictimSpawnPoint);
             Functions.PlayScannerAudio("CITIZENS_REPORT_01 CRIME_DISTURBING_THE_PEACE_01");
-            CalloutMessage = "[DC] Individual Shouting At People";
+            CalloutMessage = "[DYNC] Individual Shouting At People";
             CalloutPosition = VictimSpawnPoint;
             CalloutAdvisory = "Suspect is Reported to have ~y~Aggresively Shouted~w~ at Multiple Citizens.";
 
@@ -173,7 +173,7 @@ namespace DynamicCallouts.Callouts
                     {
                         while (player.DistanceTo(Victim) >= 15f && !Game.IsKeyDown(Settings.EndCall)) GameFiber.Wait(0);
                         if (Game.IsKeyDown(Settings.EndCall)) { EndCalloutHandler.CalloutForcedEnd = true; break; }
-                        if (Main.CalloutInterface) CalloutInterfaceFunctions.SendMessage(this, "Unit Arrived on Scene. Talking to Victim");
+                        if (Main.CalloutInterface) CalloutInterfaceFunctions.SendMessage(this, Settings.CallSign + " Arrived on Scene. Talking to Victim");
                         if (MainScenario == 0) AssaultOpening();
                         if (Victim.Exists() && Victim.IsInAnyVehicle(false))
                         {

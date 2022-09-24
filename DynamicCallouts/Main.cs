@@ -19,6 +19,7 @@ namespace DynamicCallouts
     {
         public XmlDocument rankSys = new XmlDocument();
         public int XPValue;
+        public string CallSign;
 
         public static bool CalloutInterface;
         public static bool STP;
@@ -59,9 +60,9 @@ namespace DynamicCallouts
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "~g~v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " ~w~by ~b~Officer Jarad", "~g~successfully loaded!");
 
                 PluginCheck.isUpdateAvailable();
-                rankSys.Load("Plugins/LSPDFR/DynamicCallouts/Rank.xml");
+                /*rankSys.Load("Plugins/LSPDFR/DynamicCallouts/Rank.xml");
                 XPValue = Convert.ToInt32(rankSys.SelectSingleNode("Rank/XP").InnerText);
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "Stats", "Realism Counter: ~g~" + XPValue + "~w~.");
+                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "Stats", "Realism Counter: ~g~" + XPValue + "~w~.<br>CallSign: ~b~" + Settings.CallSign + "~w~.");*/
 
             }
         }
@@ -93,6 +94,8 @@ namespace DynamicCallouts
             }
             Functions.RegisterCallout(typeof(IndividualShoutingAtPeople));
             Functions.RegisterCallout(typeof(ATMRobbery));
+            Functions.RegisterCallout(typeof(HouseRaid));
+            Functions.RegisterCallout(typeof(StolenVehicle));
             Game.Console.Print("[LOG]: All callouts were loaded!");
             Game.Console.Print();
             Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");

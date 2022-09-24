@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Collections;
+using Rage.Native;
+using static DynamicCallouts.Callouts.HouseRaid;
+using System.Windows.Forms;
 
 namespace DynamicCallouts.Utilities
 {
@@ -64,7 +67,51 @@ namespace DynamicCallouts.Utilities
             new Vector3(2557.269f, 380.7113f, 108.6229f),
             new Vector3(-3038f, 483.778f, 7.91f),
             new Vector3(-2545.63f, 2316.986f, 33.21579f),
-    };
+        };
+
+        public enum MarkerType
+        {
+            UpsideDownCone = 0,
+            VerticalCylinder = 1,
+            ThickChevronUp = 2,
+            ThinChevronUp = 3,
+            CheckeredFlagRect = 4,
+            CheckeredFlagCircle = 5,
+            VerticleCircle = 6,
+            PlaneModel = 7,
+            LostMCDark = 8,
+            LostMCLight = 9,
+            Number0 = 10,
+            Number1 = 11,
+            Number2 = 12,
+            Number3 = 13,
+            Number4 = 14,
+            Number5 = 15,
+            Number6 = 16,
+            Number7 = 17,
+            Number8 = 18,
+            Number9 = 19,
+            ChevronUpx1 = 20,
+            ChevronUpx2 = 21,
+            ChevronUpx3 = 22,
+            HorizontalCircleFat = 23,
+            ReplayIcon = 24,
+            HorizontalCircleSkinny = 25,
+            HorizontalCircleSkinny_Arrow = 26,
+            HorizontalSplitArrowCircle = 27,
+            DebugSphere = 28,
+            DallorSign = 29,
+            HorizontalBars = 30,
+            WolfHead = 31
+        };
+
+        public enum eCombatMovement
+        {
+            CM_Stationary,
+            CM_Defensive,
+            CM_WillAdvance,
+            CM_WillRetreat
+        };
 
         public static void Dialogue(List<string> dialogue, Ped animped = null, String animdict = "missfbi3_party_d", String animname = "stand_talk_loop_a_male1", float animspeed = -1, AnimationFlags animflag = AnimationFlags.Loop)
         {
@@ -127,6 +174,36 @@ namespace DynamicCallouts.Utilities
             }
         }
 
+        public static void OpenDoor(Vector3 doorlocation, Ped resident = null, string residentmodel = "")
+        {
+            Game.DisplayHelp("Press ~y~" + Settings.InteractionKey1 + "~w~ to ~b~Ring~w~ the Doorbell.");
+            while (!Game.IsKeyDown(Settings.InteractionKey1)) GameFiber.Wait(0);
+            GameFiber.Wait(2500);
+            Game.FadeScreenOut(1500, true);
+            Game.LocalPlayer.HasControl = false;
+            if (resident != null)
+            {
+                if (residentmodel != "") resident = new Ped(residentmodel, doorlocation, Game.LocalPlayer.Character.Heading - 180);
+                else resident = new Ped(doorlocation, Game.LocalPlayer.Character.Heading - 180);
+                resident.Heading = Game.LocalPlayer.Character.Heading - 180;
+                IdleAction(resident, false);
+            }
+            GameFiber.Wait(1500);
+            Game.FadeScreenIn(1500, true);
+            Game.LocalPlayer.HasControl = true;
+        }
+
+        public static void EnterHouse(Vector3 doorLocation, Vector3 teleportTo)
+        {
+            GameFiber.Wait(1250);
+            Game.FadeScreenOut(1500, true);
+            Game.LocalPlayer.HasControl = false;
+            Game.LocalPlayer.Character.Position = teleportTo;
+            GameFiber.Wait(2500);
+            Game.FadeScreenIn(1500, true);
+            Game.LocalPlayer.HasControl = true;
+        }
+
         public static void locationChooser(ArrayList list, float maxdistance = 600f, float mindistance = 25f)
         {
             ArrayList closeLocations = new ArrayList();
@@ -178,6 +255,11 @@ namespace DynamicCallouts.Utilities
                 }
             }
             return closestLocationIndex;
+        }
+
+        public static void DrawMarker(MarkerType type, Vector3 position, Vector3 direction, Vector3 rotation, Vector3 scale, Color color, bool bobUpAndDown, bool faceCamera, bool rotate, bool drawOnEntities)
+        {
+            NativeFunction.Natives.DRAW_MARKER((int)type, position, direction, rotation, scale, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamera, 2, rotate, 0, 0, drawOnEntities);
         }
     }
 }
