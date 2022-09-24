@@ -18,6 +18,9 @@ namespace DynamicCallouts
     public class Main : Plugin
     {
         public static XmlDocument CalloutConfiguration = new XmlDocument();
+        public XmlDocument rankSys = new XmlDocument();
+        public int XPValue;
+        public string CallSign;
 
         public static bool CalloutInterface;
         public static bool STP;
