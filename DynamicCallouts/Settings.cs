@@ -34,7 +34,6 @@ namespace DynamicCallouts
             LeaveCalloutsRunning = ini.ReadBoolean("Miscellaneous", "LeaveCalloutsRunning", false);
             AutomaticBackup = ini.ReadBoolean("Miscellaneous", "AutomaticBackup", true);
             CallSign = ini.ReadString("Officer Settings", "CallSign", "1-Lincoln-18");
-            Main.IndividualShoutingAtPeople = Convert.ToBoolean(Main.CalloutConfiguration.SelectSingleNode("CalloutConfiguration/GeneralSettings/Callouts/IndividualShoutingAtPeople").InnerText);
         }
         public static readonly string PluginVersion = "1.0.5.1";
     }
