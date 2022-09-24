@@ -9,6 +9,8 @@
     using RAGENativeUI.Elements;
     using RAGENativeUI.PauseMenu;
     using System.Diagnostics;
+    using LSPD_First_Response.Mod.Callouts;
+    using LSPD_First_Response.Mod.API;
 
     internal static class Menu
     {
@@ -21,13 +23,10 @@
 
         public static void Main()
         {
-            // create the pool that handles drawing and processing the menus
             pool = new MenuPool();
 
             // create the main menu
-            mainMenu = new UIMenu("DynamicCallouts", "By ~g~Officer Jarad, TheBroHypers");
-
-            // create the menu items
+            mainMenu = new UIMenu("DynamicCallouts", "By ~g~Officer Jared, TheBroHypers");
             {
                 var discordButton = new UIMenuItem("~b~Discord Server");
                 discordButton.Activated += (s, e) => discordButtonClicked();
@@ -38,28 +37,32 @@
                 mainMenu.AddItems(discordButton, VehicleList);
             }
 
-            // create a child menu
-            UIMenu childMenu = new UIMenu("Callouts", "Press ENTER to force the specified callout.");
-
-            // create a new item in the main menu and bind the child menu to it
+            UIMenu childMenu = new UIMenu("Callouts", "Press ENTER to force the Callout.");
             {
+
                 UIMenuItem bindItem = new UIMenuItem("Callouts");
+
+                var ATMRobbery = new UIMenuItem("ATM Robbery");
+                ATMRobbery.Activated += (s, e) => Functions.StartCallout("[DYNC] ATM Robbery");
+
+                var IndividualShoutingAtPeople = new UIMenuItem("Individual Shouting at People");
+                IndividualShoutingAtPeople.Activated += (s, e) => Functions.StartCallout("[DYNC] Individual Shouting at People");
+
+                var HouseRaid = new UIMenuItem("House Raid");
+                HouseRaid.Activated += (s, e) =>
+                {
+                    childMenu.Visible = false;
+                    Functions.StartCallout("[DYNC] House Raid");
+                };
+
+                childMenu.AddItems(ATMRobbery, IndividualShoutingAtPeople, HouseRaid);
 
                 mainMenu.AddItem(bindItem);
                 mainMenu.BindMenuToItem(childMenu, bindItem);
-
-
-                // bindItem.RightBadge = UIMenuItem.BadgeStyle.Star;
-                // mainMenu.OnIndexChange += (menu, index) => mainMenu.MenuItems[index].RightBadge = UIMenuItem.BadgeStyle.None;
             }
 
-            // create the child menu items
-            childMenu.AddItems(Enumerable.Range(1, 50).Select(i => new UIMenuItem($"Item #{i}")));
-
-            // add all the menus to the pool
             pool.Add(mainMenu, childMenu);
 
-            // start the fiber which will handle drawing and processing the menus
             GameFiber.StartNew(ProcessMenus);
         }
 
@@ -75,8 +78,6 @@
 
         private static void ProcessMenus()
         {
-            // draw the menu banners (only needed if UIMenu.SetBannerType(Rage.Texture) is used)
-            // Game.RawFrameRender += (s, e) => pool.DrawBanners(e.Graphics);
 
             while (true)
             {

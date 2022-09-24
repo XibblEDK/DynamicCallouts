@@ -75,7 +75,7 @@ namespace DynamicCallouts.Callouts
             MainScenario = new Random().Next(0, 3);
 
             ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 20f);
-            AddMinimumDistanceCheck(30f, SpawnPoint);
+            AddMinimumDistanceCheck(80f, SpawnPoint);
             AddMaximumDistanceCheck(600f, SpawnPoint);
 
             CalloutMessage = "[DYNC] ATM Robbery";
@@ -139,6 +139,7 @@ namespace DynamicCallouts.Callouts
                             if (!SuspectBlipCreated)
                             {
                                 SearchAreaBlip.Alpha = 0;
+                                SearchAreaBlip.IsRouteEnabled = false;
                                 SuspectBlip = new Blip(Suspect);
                                 SuspectBlip.Name = "Suspect";
                                 SuspectBlip.IsFriendly = false;
@@ -199,7 +200,7 @@ namespace DynamicCallouts.Callouts
                                 }
                             }
 
-                            else if  (!HasSuspectSurrended)
+                            else if (!HasSuspectSurrended)
                             {
                                 Suspect.Tasks.ClearImmediately();
                                 Suspect.Inventory.EquippedWeapon.DropToGround();

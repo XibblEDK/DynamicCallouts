@@ -10,7 +10,7 @@ namespace DynamicCallouts.VersionChecker
         public static bool isUpdateAvailable()
         {
             string curVersion = Settings.PluginVersion;
-            Uri latestVersionUri = new Uri("https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=40649&textOnly=1");
+            Uri latestVersionUri = new Uri("https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=40494&textOnly=1");
             WebClient webClient = new WebClient();
             string receivedData = string.Empty;
             try

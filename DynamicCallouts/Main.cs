@@ -17,11 +17,12 @@ namespace DynamicCallouts
 {
     public class Main : Plugin
     {
-        public XmlDocument rankSys = new XmlDocument();
-        public int XPValue;
+        public static XmlDocument CalloutConfiguration = new XmlDocument();
 
         public static bool CalloutInterface;
         public static bool STP;
+
+        public static bool IndividualShoutingAtPeople;
 
         public override void Finally() { }
 
@@ -56,12 +57,12 @@ namespace DynamicCallouts
                 Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                 Game.Console.Print();
 
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "~g~v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " ~w~by ~b~Officer Jarad", "~g~successfully loaded!");
+                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "~g~v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " ~w~by ~b~Officer Jarad", "~g~successfully loaded!<br>Callsign: " + Settings.CallSign);
 
                 PluginCheck.isUpdateAvailable();
-                rankSys.Load("Plugins/LSPDFR/DynamicCallouts/Rank.xml");
+                /*rankSys.Load("Plugins/LSPDFR/DynamicCallouts/Rank.xml");
                 XPValue = Convert.ToInt32(rankSys.SelectSingleNode("Rank/XP").InnerText);
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "Stats", "Realism Counter: ~g~" + XPValue + "~w~.");
+                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "Stats", "Realism Counter: ~g~" + XPValue + "~w~.<br>CallSign: ~b~" + Settings.CallSign + "~w~.");*/
 
             }
         }
@@ -91,8 +92,12 @@ namespace DynamicCallouts
                 Game.LogTrivial("User do NOT have StopThePed installed.");
                 STP = false;
             }
-            Functions.RegisterCallout(typeof(IndividualShoutingAtPeople));
+            if (IndividualShoutingAtPeople)
+            {
+                Functions.RegisterCallout(typeof(IndividualShoutingAtPeople));
+            }
             Functions.RegisterCallout(typeof(ATMRobbery));
+            Functions.RegisterCallout(typeof(HouseRaid));
             Game.Console.Print("[LOG]: All callouts were loaded!");
             Game.Console.Print();
             Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
