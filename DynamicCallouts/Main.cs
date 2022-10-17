@@ -17,29 +17,14 @@ namespace DynamicCallouts
 {
     public class Main : Plugin
     {
-        public static XmlDocument CalloutConfiguration = new XmlDocument();
-        public XmlDocument rankSys = new XmlDocument();
-        public int XPValue;
-        public string CallSign;
-
         public static bool CalloutInterface;
         public static bool STP;
-
-        public static bool IndividualShoutingAtPeople;
 
         public override void Finally() { }
 
         public override void Initialize()
         {
             Functions.OnOnDutyStateChanged += Functions_OnOnDutyStateChanged;
-
-            GameFiber.StartNew(delegate
-            {
-                Menu.Main();
-            });
-
-
-            Settings.LoadSettings();
 
             //Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "~g~v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " ~w~by ~b~Officer Jarad", "~g~successfully loaded!");
         }
@@ -48,6 +33,9 @@ namespace DynamicCallouts
         {
             if (onDuty)
             {
+                Settings.LoadSettings();
+                Menu.Main();
+                StatsView.Main();
                 RegisterCallouts();
                 Game.Console.Print();
                 Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -60,7 +48,8 @@ namespace DynamicCallouts
                 Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                 Game.Console.Print();
 
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "~g~v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " ~w~by ~b~Officer Jarad", "~g~successfully loaded!<br>Callsign: " + Settings.CallSign);
+                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "~g~v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " ~w~by ~b~Officer Jared", "~g~successfully loaded! Have a great shift! :)");
+                Game.DisplayNotification(StatsView.textureStr, StatsView.textureStr, "Player Info", "Dyanmic Callouts", "Callsign: " + Settings.CallSign + "<br>Officer Name: " + Settings.OfficerName + "<br>Responded Callouts: " + Settings.RespondedCallouts + "<br>Arrests: " + Settings.Arrests + "<br>Pursuits: " + Settings.Pursuits + "<br>Involved in fights: " + Settings.InvolvedInFights + "<br>Deaths: " + Settings.Deaths);
 
                 PluginCheck.isUpdateAvailable();
                 /*rankSys.Load("Plugins/LSPDFR/DynamicCallouts/Rank.xml");
@@ -95,10 +84,7 @@ namespace DynamicCallouts
                 Game.LogTrivial("User do NOT have StopThePed installed.");
                 STP = false;
             }
-            if (IndividualShoutingAtPeople)
-            {
-                Functions.RegisterCallout(typeof(IndividualShoutingAtPeople));
-            }
+            Functions.RegisterCallout(typeof(IndividualShoutingAtPeople));
             Functions.RegisterCallout(typeof(ATMRobbery));
             Functions.RegisterCallout(typeof(HouseRaid));
             Game.Console.Print("[LOG]: All callouts were loaded!");

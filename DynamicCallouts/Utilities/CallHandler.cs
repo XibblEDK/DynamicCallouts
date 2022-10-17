@@ -7,6 +7,8 @@ using System.Collections;
 using Rage.Native;
 using static DynamicCallouts.Callouts.HouseRaid;
 using System.Windows.Forms;
+using System.Deployment.Internal;
+using RAGENativeUI;
 
 namespace DynamicCallouts.Utilities
 {
@@ -16,6 +18,7 @@ namespace DynamicCallouts.Utilities
         private static int count;
         public static Vector3 SpawnPoint;
         static Random random = new Random();
+        public static string enteredText;
 
         private static string[,] FemaleCopAnim = new string[,] {
             {"amb@world_human_cop_idles@female@base", "base"},
@@ -260,6 +263,20 @@ namespace DynamicCallouts.Utilities
         public static void DrawMarker(MarkerType type, Vector3 position, Vector3 direction, Vector3 rotation, Vector3 scale, Color color, bool bobUpAndDown, bool faceCamera, bool rotate, bool drawOnEntities)
         {
             NativeFunction.Natives.DRAW_MARKER((int)type, position, direction, rotation, scale, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamera, 2, rotate, 0, 0, drawOnEntities);
+        }
+
+        internal static string OpenTextInput(string windowTitle, string defaultText, int maxLength)
+        {
+            NativeFunction.Natives.DISABLE_ALL_CONTROL_ACTIONS(2);
+            NativeFunction.Natives.DISPLAY_ONSCREEN_KEYBOARD(true, windowTitle, 0, defaultText, 0, 0, 0, maxLength);
+
+            while (NativeFunction.Natives.UPDATE_ONSCREEN_KEYBOARD<int>() == 0)
+            {
+                GameFiber.Yield();
+            }
+
+            NativeFunction.Natives.ENABLE_ALL_CONTROL_ACTIONS(2);
+            return NativeFunction.Natives.GET_ONSCREEN_KEYBOARD_RESULT<string>();
         }
     }
 }

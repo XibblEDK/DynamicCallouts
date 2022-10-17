@@ -46,7 +46,7 @@ namespace DynamicCallouts.Callouts
             CalloutAdvisory = "Nothing Yet";
 
             World.GetAllPeds().ToList().ForEach(p => {
-                if (p.DistanceTo(CalloutPlace) < 7f) p.Delete();
+                if (p.DistanceTo(CalloutPlace) > 7f) p.Delete();
             });
 
             return base.OnBeforeCalloutDisplayed();

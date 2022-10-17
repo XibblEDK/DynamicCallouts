@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Collections;
 using DynamicCallouts.Utilities;
 using DynamicCallouts.VersionChecker;
+using System.IO;
 
 namespace DynamicCallouts.Callouts
 {
@@ -53,7 +54,6 @@ namespace DynamicCallouts.Callouts
         };
 
         private Vector3 VictimSpawnPoint;
-        private Vector3 SuspectSpawnPoint;
         private String Zone;
         private String[] Suspects;
 
@@ -110,6 +110,13 @@ namespace DynamicCallouts.Callouts
 
         public override bool OnBeforeCalloutDisplayed()
         {
+            if (!Settings.IndividualShoutingAtPeople)
+            {
+                Game.LogTrivial("[LOG]: User has disabled IndividualShoutingAtPeople, returning false.");
+                Game.LogTrivial("[LOG]: To enable the callout please check it in the menu or change false to true in the .ini file.");
+                return false;
+            }
+
             Zone = Functions.GetZoneAtPosition(Game.LocalPlayer.Character.Position).GameName;
             CallHandler.locationChooser(list);
             if (CallHandler.locationReturned) { VictimSpawnPoint = CallHandler.SpawnPoint; } else { return false; }
@@ -152,6 +159,13 @@ namespace DynamicCallouts.Callouts
 
             System.Random rYUY = new System.Random();
             SuspectAction = rYUY.Next(0, 3);
+
+            Settings.RespondedCallouts++;
+            Settings.Stats.SelectSingleNode("Stats/RespondedCallouts").InnerText = Settings.RespondedCallouts.ToString();
+            Settings.Stats.Save(Settings.xmlpath);
+            Game.LogTrivial("RespondedCallouts changed new int: " + Settings.RespondedCallouts);
+            StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths;
+
 
             if (!CalloutRunning) Callout(); CalloutRunning = true;
             return base.OnCalloutAccepted();
@@ -366,7 +380,7 @@ namespace DynamicCallouts.Callouts
                     else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, Suspect was unfortunately ~r~Killed~w~."); }
 
                     GameFiber.Wait(2000);
-                    LSPD_First_Response.Mod.API.Functions.PlayScannerAudio("REPORT_RESPONSE_COPY_02");
+                    Functions.PlayScannerAudio("REPORT_RESPONSE_COPY_02");
                     GameFiber.Wait(2000);
                 }
                 else if (SuspectAction == 1) Fight();
@@ -382,13 +396,17 @@ namespace DynamicCallouts.Callouts
                 Suspect.Inventory.Weapons.Clear();
                 GameFiber.Wait(500);
                 Suspect.Tasks.FightAgainst(Game.LocalPlayer.Character, -1);
+                Settings.InvolvedInFights++;
+                Settings.Stats.SelectSingleNode("Stats/InvolvedInFights").InnerText = Settings.InvolvedInFights.ToString();
+                Settings.Stats.Save(Settings.xmlpath);
+                StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths;
                 while (Suspect.Exists() && !Functions.IsPedArrested(Suspect) && Suspect.IsAlive)
                 {
                     GameFiber.Yield();
                 }
                 if (Suspect.Exists())
                 {
-                    if (Functions.IsPedArrested(Suspect) || Suspect.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Attempting to ~r~Assault an Officer."); }
+                    if (Functions.IsPedArrested(Suspect) && Suspect.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Attempting to ~r~Assault an Officer."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths; }
                     else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was unfortunately ~r~Killed~w~ for ~r~Assaulting an Officer."); }
                 }
             }
@@ -405,6 +423,10 @@ namespace DynamicCallouts.Callouts
                 GameFiber.Wait(500);
                 Suspect.Tasks.ClearImmediately();
                 Functions.PlayScannerAudio("CRIME_SUSPECT_ON_THE_RUN_01");
+                Settings.Pursuits++;
+                Settings.Stats.SelectSingleNode("Stats/Pursuits").InnerText = Settings.Pursuits.ToString();
+                Settings.Stats.Save(Settings.xmlpath);
+                StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths;
                 MainPursuit = Functions.CreatePursuit();
                 if (Settings.AutomaticBackup)
                 {
@@ -415,7 +437,7 @@ namespace DynamicCallouts.Callouts
                 while (Functions.IsPursuitStillRunning(MainPursuit)) { GameFiber.Wait(0); }
                 if (Suspect.Exists())
                 {
-                    if (Functions.IsPedArrested(Suspect)) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Following the Pursuit."); }
+                    if (Functions.IsPedArrested(Suspect)) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Following the Pursuit."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths; }
                     else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was ~r~Killed~w~ Following the Pursuit."); }
                 }
                 else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was ~r~Killed~w~ Following the Pursuit."); }
