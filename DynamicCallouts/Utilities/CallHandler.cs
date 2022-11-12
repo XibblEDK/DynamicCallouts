@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Collections;
 using Rage.Native;
-using static DynamicCallouts.Callouts.HouseRaid;
 using System.Windows.Forms;
 using System.Deployment.Internal;
 using RAGENativeUI;
+using RAGENativeUI.Elements;
+using System.Windows;
+using System.Linq;
 
 namespace DynamicCallouts.Utilities
 {
@@ -19,6 +21,7 @@ namespace DynamicCallouts.Utilities
         public static Vector3 SpawnPoint;
         static Random random = new Random();
         public static string enteredText;
+        private static string[] VehicleModels;
 
         private static string[,] FemaleCopAnim = new string[,] {
             {"amb@world_human_cop_idles@female@base", "base"},
@@ -277,6 +280,17 @@ namespace DynamicCallouts.Utilities
 
             NativeFunction.Natives.ENABLE_ALL_CONTROL_ACTIONS(2);
             return NativeFunction.Natives.GET_ONSCREEN_KEYBOARD_RESULT<string>();
+        }
+        public static Vehicle SpawnVehicle(Vector3 SpawnPoint, float Heading, bool persistent = true)
+        {
+            VehicleModels = new string[63] {"asbo", "blista", "dilettante", "panto", "prairie", "cogcabrio", "exemplar", "f620", "felon", "felon2", "jackal", "oracle", "oracle2", "sentinel", "sentinel2",
+            "zion", "zion2", "baller", "baller2", "baller3", "cavalcade", "fq2", "granger", "gresley", "habanero", "huntley", "mesa", "radi", "rebla", "rocoto", "seminole", "serrano", "xls", "asea", "asterope",
+            "emporor", "fugitive", "ingot", "intruder", "premier", "primo", "primo2", "regina", "stanier", "stratum", "surge", "tailgater", "washington", "bestiagts", "blista2", "buffalo", "schafter2", "euros",
+            "sadler", "bison", "bison2", "bison3", "burrito", "burrito2", "minivan", "minivan2", "paradise", "pony"};
+            int model = random.Next(0, VehicleModels.Length);
+            var veh = new Vehicle(VehicleModels[model], SpawnPoint, Heading);
+            if (persistent) veh.IsPersistent = true; //vehicle is marked as persistent by default
+            return veh;
         }
     }
 }

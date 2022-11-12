@@ -11,6 +11,8 @@ using Rage;
 using DynamicCallouts.Callouts;
 using DynamicCallouts.VersionChecker;
 using DynamicCallouts;
+using DynamicCallouts.Utilities;
+using RAGENativeUI.Elements;
 
 [assembly: Rage.Attributes.Plugin("DynamicCallouts", Description = "LSPDFR Callout Pack", Author = "XibblE, TheBroHypers")]
 namespace DynamicCallouts
@@ -19,6 +21,7 @@ namespace DynamicCallouts
     {
         public static bool CalloutInterface;
         public static bool STP;
+        public static Sprite headshotSprite;
 
         public override void Finally() { }
 
@@ -33,28 +36,29 @@ namespace DynamicCallouts
         {
             if (onDuty)
             {
-                Settings.LoadSettings();
-                Menu.Main();
-                StatsView.Main();
-                RegisterCallouts();
-                Game.Console.Print();
-                Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                Game.Console.Print();
-                Game.Console.Print("[LOG]: Callouts and settings were loaded correctly.");
-                Game.Console.Print("[LOG]: The config file was loaded successfully.");
-                Game.Console.Print("[VERSION]: Found Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
-                Game.Console.Print("[LOG]: Checking for a new DynamicCallouts version...");
-                Game.Console.Print();
-                Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                Game.Console.Print();
+                GameFiber.StartNew(delegate
+                {
+                    Settings.LoadSettings();
+                    Menu.Main();
+                    StatsView.Main();
+                    RegisterCallouts();
+                    Game.Console.Print();
+                    Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                    Game.Console.Print();
+                    Game.Console.Print("[LOG]: Callouts and settings were loaded correctly.");
+                    Game.Console.Print("[LOG]: The config file was loaded successfully.");
+                    Game.Console.Print("[VERSION]: Found Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                    Game.Console.Print("[LOG]: Checking for a new DynamicCallouts version...");
+                    Game.Console.Print();
+                    Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                    Game.Console.Print();
 
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "~g~v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " ~w~by ~b~Officer Jared", "~g~successfully loaded! Have a great shift! :)");
-                Game.DisplayNotification(StatsView.textureStr, StatsView.textureStr, "Player Info", "Dyanmic Callouts", "Callsign: " + Settings.CallSign + "<br>Officer Name: " + Settings.OfficerName + "<br>Responded Callouts: " + Settings.RespondedCallouts + "<br>Arrests: " + Settings.Arrests + "<br>Pursuits: " + Settings.Pursuits + "<br>Involved in fights: " + Settings.InvolvedInFights + "<br>Deaths: " + Settings.Deaths);
+                    Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "~g~v" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " ~w~by ~b~Officer Jared", "~g~successfully loaded! Have a great shift! :)");
+                    GameFiber.Wait(5000);
+                    Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Player Info", "Dynamic Callouts", "Callsign: " + Settings.CallSign + "<br>Officer Name: " + Settings.OfficerName + "<br>Responded Callouts: " + Settings.RespondedCallouts + "<br>Arrests: " + Settings.Arrests + "<br>Pursuits: " + Settings.Pursuits + "<br>Involved in fights: " + Settings.InvolvedInFights);
 
-                PluginCheck.isUpdateAvailable();
-                /*rankSys.Load("Plugins/LSPDFR/DynamicCallouts/Rank.xml");
-                XPValue = Convert.ToInt32(rankSys.SelectSingleNode("Rank/XP").InnerText);
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DynamicCallouts", "Stats", "Realism Counter: ~g~" + XPValue + "~w~.<br>CallSign: ~b~" + Settings.CallSign + "~w~.");*/
+                    PluginCheck.isUpdateAvailable();
+                });
 
             }
         }
@@ -86,7 +90,9 @@ namespace DynamicCallouts
             }
             Functions.RegisterCallout(typeof(IndividualShoutingAtPeople));
             Functions.RegisterCallout(typeof(ATMRobbery));
-            Functions.RegisterCallout(typeof(HouseRaid));
+            Functions.RegisterCallout(typeof(GunshotsReported));
+            Functions.RegisterCallout(typeof(GarbageOnFire));
+            Functions.RegisterCallout(typeof(LorryPursuit));
             Game.Console.Print("[LOG]: All callouts were loaded!");
             Game.Console.Print();
             Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");

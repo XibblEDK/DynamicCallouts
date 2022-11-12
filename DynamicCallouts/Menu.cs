@@ -13,6 +13,7 @@
     using LSPD_First_Response.Mod.API;
     using DynamicCallouts.Utilities;
     using System;
+    using System.Drawing;
 
     internal static class Menu
     {
@@ -58,6 +59,7 @@
 
                 mainMenu.AddItems(discordButton, VehicleList, Stats);
             }
+            mainMenu.SetBannerType(new Sprite("phone_wallpaper_blueshards", "phone_wallpaper_blueshards", System.Drawing.Point.Empty, Size.Empty));
 
             UIMenu settings = new UIMenu("Settings", "Change your settings inside the game!");
             {
@@ -66,6 +68,7 @@
                 mainMenu.AddItem(bindItem);
                 mainMenu.BindMenuToItem(settings, bindItem);
             }
+            settings.SetBannerType(new Sprite("phone_wallpaper_blueshards", "phone_wallpaper_blueshards", System.Drawing.Point.Empty, Size.Empty));
 
             UIMenu Keybinds = new UIMenu("Keybinds", "Change your keybinds");
             {
@@ -115,6 +118,7 @@
                 settings.AddItem(keybindsBindItem);
                 settings.BindMenuToItem(Keybinds, keybindsBindItem);
             };
+            Keybinds.SetBannerType(new Sprite("phone_wallpaper_blueshards", "phone_wallpaper_blueshards", System.Drawing.Point.Empty, Size.Empty));
 
             UIMenu officerSettings = new UIMenu("Officer Settings", "Change your officer settings");
             {
@@ -146,6 +150,7 @@
                 settings.AddItem(officerSettingsBindItem);
                 settings.BindMenuToItem(officerSettings, officerSettingsBindItem);
             };
+            officerSettings.SetBannerType(new Sprite("phone_wallpaper_blueshards", "phone_wallpaper_blueshards", System.Drawing.Point.Empty, Size.Empty));
 
             UIMenu Callouts = new UIMenu("Callouts", "Enable and disable callouts!");
             {
@@ -171,20 +176,41 @@
                     Settings.ATMRobbery = Settings.ini.ReadBoolean("Callouts", "ATMRobbery", true);
                 };
 
-                var HouseRaid = new UIMenuCheckboxItem("HouseRaid", Settings.HouseRaid);
-                HouseRaid.CheckboxEvent += (s, c) =>
+                var GunshotsReported = new UIMenuCheckboxItem("GunshotsReported", Settings.GunshotsReported);
+                GunshotsReported.CheckboxEvent += (s, c) =>
                 {
-                    if (HouseRaid.Checked)
-                        Settings.ini.Write("Callouts", "HouseRaid", " " + true);
-                    if (!HouseRaid.Checked)
-                        Settings.ini.Write("Callouts", "HouseRaid", " " + false);
-                    Settings.HouseRaid = Settings.ini.ReadBoolean("Callouts", "HouseRaid", true);
+                    if (GunshotsReported.Checked)
+                        Settings.ini.Write("Callouts", "GunshotsReported", " " + true);
+                    if (!GunshotsReported.Checked)
+                        Settings.ini.Write("Callouts", "GunshotsReported", " " + false);
+                    Settings.GunshotsReported = Settings.ini.ReadBoolean("Callouts", "GunshotsReported", true);
+                };
+                
+                var GarbageOnFire = new UIMenuCheckboxItem("GarbageOnFire", Settings.GarbageOnFire);
+                GarbageOnFire.CheckboxEvent += (s, c) =>
+                {
+                    if (GarbageOnFire.Checked)
+                        Settings.ini.Write("Callouts", "GarbageOnFire", " " + true);
+                    if (!GarbageOnFire.Checked)
+                        Settings.ini.Write("Callouts", "GarbageOnFire", " " + false);
+                    Settings.GarbageOnFire = Settings.ini.ReadBoolean("Callouts", "GarbageOnFire", true);
                 };
 
-                Callouts.AddItems(IndividualShoutingAtPeople, ATMRobbery, HouseRaid);
+                var LorryPursuit = new UIMenuCheckboxItem("LorryPursuit", Settings.LorryPursuit);
+                LorryPursuit.CheckboxEvent += (s, c) =>
+                {
+                    if (LorryPursuit.Checked)
+                        Settings.ini.Write("Callouts", "LorryPursuit", " " + true);
+                    if (!LorryPursuit.Checked)
+                        Settings.ini.Write("Callouts", "LorryPursuit", " " + false);
+                    Settings.LorryPursuit = Settings.ini.ReadBoolean("Callouts", "LorryPursuit", true);
+                };
+
+                Callouts.AddItems(IndividualShoutingAtPeople, ATMRobbery, GunshotsReported, GarbageOnFire, LorryPursuit);
                 settings.AddItems(calloutsBindItem);
                 settings.BindMenuToItem(Callouts, calloutsBindItem);
             }
+            Callouts.SetBannerType(new Sprite("phone_wallpaper_blueshards", "phone_wallpaper_blueshards", System.Drawing.Point.Empty, Size.Empty));
 
             pool.Add(mainMenu, settings, Callouts, Keybinds, officerSettings);
 

@@ -9,6 +9,7 @@ using Rage.Native;
 using System.Drawing;
 using System.Collections;
 using DynamicCallouts.Utilities;
+using LSPD_First_Response.Engine;
 
 namespace DynamicCallouts.Callouts
 {
@@ -82,12 +83,13 @@ namespace DynamicCallouts.Callouts
             MainScenario = new Random().Next(0, 3);
 
             ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 20f);
-            AddMinimumDistanceCheck(80f, SpawnPoint);
-            AddMaximumDistanceCheck(600f, SpawnPoint);
+            AddMinimumDistanceCheck(100f, SpawnPoint);
+            AddMaximumDistanceCheck(1200f, SpawnPoint);
 
             CalloutMessage = "[DYNC] ATM Robbery";
             CalloutPosition = SpawnPoint;
             CalloutAdvisory = "Suspect is Reported to have a ~r~weapon on him~w~.";
+            Functions.PlayScannerAudioUsingPosition("ATTENTION_ALL_UNITS CRIME_SUSPICIOUS_ACTIVITY_01 IN_OR_ON_POSITION", SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -168,7 +170,7 @@ namespace DynamicCallouts.Callouts
                                 Settings.InvolvedInFights++;
                                 Settings.Stats.SelectSingleNode("Stats/InvolvedInFights").InnerText = Settings.InvolvedInFights.ToString();
                                 Settings.Stats.Save(Settings.xmlpath);
-                                StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths;
+                                StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
 
                                 while (Suspect.Exists() && !Functions.IsPedArrested(Suspect) && Suspect.IsAlive)
                                 {
@@ -176,7 +178,7 @@ namespace DynamicCallouts.Callouts
                                 }
                                 if (Suspect.Exists())
                                 {
-                                    if (Functions.IsPedArrested(Suspect) && Suspect.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Attempting to ~r~Assault an Officer."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths; }
+                                    if (Functions.IsPedArrested(Suspect) && Suspect.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Attempting to ~r~Assault an Officer."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights; }
                                     else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was unfortunately ~r~Killed~w~ for ~r~Assaulting an Officer."); }
                                 }
                                 GameFiber.Wait(2000);
@@ -193,7 +195,7 @@ namespace DynamicCallouts.Callouts
                                     Settings.Pursuits++;
                                     Settings.Stats.SelectSingleNode("Stats/Pursuits").InnerText = Settings.Pursuits.ToString();
                                     Settings.Stats.Save(Settings.xmlpath);
-                                    StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths;
+                                    StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
                                     Pursuit = Functions.CreatePursuit();
                                     if (Settings.AutomaticBackup)
                                     {
@@ -206,7 +208,7 @@ namespace DynamicCallouts.Callouts
                                     while (Functions.IsPursuitStillRunning(Pursuit)) { GameFiber.Wait(0); }
                                     if (Suspect.Exists())
                                     {
-                                        if (Functions.IsPedArrested(Suspect)) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Following the Pursuit."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths; }
+                                        if (Functions.IsPedArrested(Suspect)) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Following the Pursuit."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights; }
                                         else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was ~r~Killed~w~ Following the Pursuit."); }
                                     }
                                     GameFiber.Wait(2000);
@@ -226,7 +228,7 @@ namespace DynamicCallouts.Callouts
                                 }
                                 if (Suspect.Exists())
                                 {
-                                    if (Functions.IsPedArrested(Suspect) && Suspect.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Attempting to ~r~Rob an ATM~w~."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights + "~n~ ~n~Deaths: " + Settings.Deaths; }
+                                    if (Functions.IsPedArrested(Suspect) && Suspect.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Attempting to ~r~Rob an ATM~w~."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights; }
                                     else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was unfortunately ~r~Killed~w~."); }
                                 }
                                 GameFiber.Wait(2000);
@@ -238,7 +240,6 @@ namespace DynamicCallouts.Callouts
                         }
                         if (Suspect && Suspect.IsDead) End();
                         if (Functions.IsPedArrested(Suspect)) End();
-                        if (player.IsDead) End();
                         if (Game.IsKeyDown(Settings.EndCall)) End();
                     }
                 }
