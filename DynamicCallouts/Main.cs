@@ -58,6 +58,7 @@ namespace DynamicCallouts
                     Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Player Info", "Dynamic Callouts", "Callsign: " + Settings.CallSign + "<br>Officer Name: " + Settings.OfficerName + "<br>Responded Callouts: " + Settings.RespondedCallouts + "<br>Arrests: " + Settings.Arrests + "<br>Pursuits: " + Settings.Pursuits + "<br>Involved in fights: " + Settings.InvolvedInFights);
 
                     PluginCheck.isUpdateAvailable();
+                    //PluginCheck.isRNUIUpdateAvailable();
                 });
 
             }

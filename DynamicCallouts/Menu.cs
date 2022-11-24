@@ -14,6 +14,7 @@
     using DynamicCallouts.Utilities;
     using System;
     using System.Drawing;
+    using DynamicCallouts.Callouts;
 
     internal static class Menu
     {
@@ -48,7 +49,18 @@
                 discordButton.Activated += (s, e) => discordButtonClicked();
 
                 var VehicleList = new UIMenuListScrollerItem<string>("Spawn Vehicle", "Spawn the selected vehicle.", new[] { "Police", "Police2", "Police3", "Police4", "Policeb", "Policet" });
-                VehicleList.Activated += (s, e) => new Vehicle(VehicleList.SelectedItem, Game.LocalPlayer.Character.GetOffsetPositionFront(10f), Game.LocalPlayer.Character.Heading);
+                VehicleList.Activated += (s, e) =>
+                {
+                    try
+                    {
+                        new Vehicle(VehicleList.SelectedItem, Game.LocalPlayer.Character.GetOffsetPositionFront(10f), Game.LocalPlayer.Character.Heading);
+                    }
+                    catch (Exception ex)
+                    {
+                        Game.LogTrivial("DynamicCallouts: Couldn't spawn " + VehicleList.SelectedItem);
+                        Game.LogTrivial(ex.ToString());
+                    }
+                };
 
                 var Stats = new UIMenuItem("Stats");
                 Stats.Activated += (s, e) =>
@@ -74,7 +86,7 @@
             {
                 UIMenuItem keybindsBindItem = new UIMenuItem("Keybinds");
 
-                var EndCall = new UIMenuListScrollerItem<string>("EndCall", "Change the keybind of EndCall", new[] { Convert.ToString(Settings.EndCall), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9"});
+                var EndCall = new UIMenuListScrollerItem<string>("EndCall", "Press Enter to change the keybind of EndCall", new[] { Convert.ToString(Settings.EndCall), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9"});
                 EndCall.Activated += (s, e) =>
                 {
                     Settings.ini.Write("Keys", "EndCall", " " + EndCall.SelectedItem);
@@ -82,7 +94,7 @@
                     Settings.EndCall = EndCallKeyBinding;
                 };
 
-                var Dialog = new UIMenuListScrollerItem<string>("Dialog", "Change the keybind of Dialog", new[] { Convert.ToString(Settings.Dialog), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9" });
+                var Dialog = new UIMenuListScrollerItem<string>("Dialog", "Press Enter to change the keybind of Dialogue", new[] { Convert.ToString(Settings.Dialog), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9" });
                 Dialog.Activated += (s, e) =>
                 {
                     Settings.ini.Write("Keys", "Dialog", " " + Dialog.SelectedItem);
@@ -90,7 +102,7 @@
                     Settings.Dialog = DialogKeyBinding;
                 };
 
-                var InteractionKey1 = new UIMenuListScrollerItem<string>("InteractionKey1", "Change the keybind of InteractionKey1", new[] { Convert.ToString(Settings.InteractionKey1), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9" });
+                var InteractionKey1 = new UIMenuListScrollerItem<string>("InteractionKey1", "Press Enter to change the keybind of InteractionKey1", new[] { Convert.ToString(Settings.InteractionKey1), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9" });
                 InteractionKey1.Activated += (s, e) =>
                 {
                     Settings.ini.Write("Keys", "InteractionKey1", " " + InteractionKey1.SelectedItem);
@@ -98,7 +110,7 @@
                     Settings.InteractionKey1 = Interaction1KeyBinding;
                 };
 
-                var InteractionKey2 = new UIMenuListScrollerItem<string>("InteractionKey2", "Change the keybind of InteractionKey2", new[] { Convert.ToString(Settings.InteractionKey2), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9" });
+                var InteractionKey2 = new UIMenuListScrollerItem<string>("InteractionKey2", "Press Enter to change the keybind of InteractionKey2", new[] { Convert.ToString(Settings.InteractionKey2), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9" });
                 InteractionKey2.Activated += (s, e) =>
                 {
                     Settings.ini.Write("Keys", "InteractionKey2", " " + InteractionKey2.SelectedItem);
@@ -106,7 +118,7 @@
                     Settings.InteractionKey2 = Interaction2KeyBinding;
                 };
 
-                var MenuKey = new UIMenuListScrollerItem<string>("Menu", "Change the keybind of Menu", new[] { Convert.ToString(Settings.Menu), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9" });
+                var MenuKey = new UIMenuListScrollerItem<string>("Menu", "Press Enter to change the keybind of Menu", new[] { Convert.ToString(Settings.Menu), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9" });
                 MenuKey.Activated += (s, e) =>
                 {
                     Settings.ini.Write("Keys", "Menu", " " + MenuKey.SelectedItem);
@@ -238,7 +250,7 @@
 
                 if (Game.IsKeyDown(MenuKeyBinding))
                 {
-                    mainMenu.Visible = true;
+                        mainMenu.Visible = true;
                 }
             }
         }

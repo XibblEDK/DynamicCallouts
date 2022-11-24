@@ -25,7 +25,7 @@ namespace DynamicCallouts.Callouts
         public Vector3 SearchArea;
 
         public Ped Suspect;
-        private Ped player = Game.LocalPlayer.Character;
+        private Ped player => Game.LocalPlayer.Character;
 
         public Blip SuspectBlip;
         public Blip SearchAreaBlip;
@@ -88,7 +88,7 @@ namespace DynamicCallouts.Callouts
 
             CalloutMessage = "[DYNC] ATM Robbery";
             CalloutPosition = SpawnPoint;
-            CalloutAdvisory = "Suspect is Reported to have a ~r~weapon on him~w~.";
+            CalloutAdvisory = "Suspect is Reported to have a ~r~weapon on him~m~.";
             Functions.PlayScannerAudioUsingPosition("ATTENTION_ALL_UNITS CRIME_SUSPICIOUS_ACTIVITY_01 IN_OR_ON_POSITION", SpawnPoint);
 
             return base.OnBeforeCalloutDisplayed();
@@ -102,7 +102,7 @@ namespace DynamicCallouts.Callouts
             }
             else
             {
-                Game.DisplayNotification("Respond with ~r~Code 3~w~.");
+                Game.DisplayNotification("~w~Respond with ~r~Code 3~w~.");
             }
 
             base.OnCalloutDisplayed();
@@ -220,7 +220,10 @@ namespace DynamicCallouts.Callouts
                             else if (!HasSuspectSurrended)
                             {
                                 Suspect.Tasks.ClearImmediately();
-                                Suspect.Inventory.EquippedWeapon.DropToGround();
+                                if (Suspect.Inventory.HasLoadedWeapon)
+                                {
+                                    Suspect.Inventory.EquippedWeapon.DropToGround();
+                                }
                                 Suspect.Tasks.PutHandsUp(-1, player);
                                 while (Suspect.Exists() && !Functions.IsPedArrested(Suspect) && Suspect.IsAlive)
                                 {

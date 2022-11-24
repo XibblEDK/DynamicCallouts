@@ -19,7 +19,7 @@ namespace DynamicCallouts.Callouts
         private Random random = new Random();
 
         private Ped Suspect;
-        private Ped player = Game.LocalPlayer.Character;
+        private Ped player => Game.LocalPlayer.Character;
 
         private List<Vector3> locations = new List<Vector3>() { new Vector3(-857.6f, -240.9f, 39.5f),
                                                                 new Vector3(-1165.1f, -1396.4f, 4.9f),
@@ -32,12 +32,13 @@ namespace DynamicCallouts.Callouts
                                                                 new Vector3(-256.417f, 6246.083f, 32.57662f)};
         private List<uint> FireList = new List<uint>();
 
-        private string[] weaponList = new string[] { "weapon_flaregun", "weapon_molotov", "weapon_petrolcan" };
+        private string[] weaponList = new string[] { "weapon_molotov", "weapon_petrolcan" };
 
         private Vector3 Spawnpoint;
         private Vector3 Area;
 
         private Blip LocationBlip;
+        private Blip SuspectBlip;
 
         private LHandle pursuit;
 
@@ -46,6 +47,7 @@ namespace DynamicCallouts.Callouts
         public bool HasBegunAttacking = false;
 
         private uint Fire;
+        private int SuspectAction;
 
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -63,7 +65,7 @@ namespace DynamicCallouts.Callouts
             Spawnpoint = CallHandler.chooseNearestLocation(locations);
 
             ShowCalloutAreaBlipBeforeAccepting(Spawnpoint, 30f);
-            AddMinimumDistanceCheck(40f, Spawnpoint);
+            AddMinimumDistanceCheck(100f, Spawnpoint);
 
             CalloutMessage = "[DYNC] Garbage on Fire";
             CalloutPosition = Spawnpoint;
@@ -105,7 +107,7 @@ namespace DynamicCallouts.Callouts
             };
             Suspect.Tasks.Wander();
 
-            decision = random.Next(0, 3);
+            decision = random.Next(0, 1);
             if (decision > 0)
             {
                 decision = random.Next(0, weaponList.Length);
@@ -151,6 +153,9 @@ namespace DynamicCallouts.Callouts
             Game.LogTrivial("RespondedCallouts changed new int: " + Settings.RespondedCallouts);
             StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
 
+            SuspectAction = random.Next(0, 2);
+            //Game.LogTrivial(SuspectAction.ToString());
+
             if (!CalloutRunning) Callout(); CalloutRunning = true;
             return base.OnCalloutAccepted();
         }
@@ -178,18 +183,24 @@ namespace DynamicCallouts.Callouts
                     while (CalloutRunning)
                     {
                         GameFiber.Yield();
-                        if (Suspect.Exists() && Suspect.DistanceTo(player.GetOffsetPosition(Vector3.RelativeFront)) < 40f)
+                        if (Suspect.Exists() && Suspect.DistanceTo(player.GetOffsetPosition(Vector3.RelativeFront)) < 35f)
                         {
                             Suspect.KeepTasks = true;
                             if (LocationBlip.Exists()) LocationBlip.Delete();
                             GameFiber.Wait(2000);
                         }
 
-                        int SuspectAction = random.Next(1, 2);
+                        if (SuspectAction == 1 && Suspect.Exists() && Suspect.DistanceTo(player.GetOffsetPosition(Vector3.RelativeFront)) < 35) 
+                        {
+                            SuspectBlip = new Blip(Suspect);
+                            SuspectBlip.IsFriendly = false;
+                            SuspectBlip.Name = "Suspect";
+                        }
+
 
                         NativeFunction.CallByName<uint>("TASK_REACT_AND_FLEE_PED", Suspect);
 
-                        if (!PursuitCreated && Suspect.DistanceTo(player.GetOffsetPosition(Vector3.RelativeFront)) < 30f && SuspectAction == 1)
+                        if (!PursuitCreated && Suspect.DistanceTo(player.GetOffsetPosition(Vector3.RelativeFront)) < 30f && SuspectAction == 0)
                         {
                             Settings.Pursuits++;
                             Settings.Stats.SelectSingleNode("Stats/Pursuits").InnerText = Settings.Pursuits.ToString();
@@ -213,14 +224,15 @@ namespace DynamicCallouts.Callouts
                             PursuitCreated = true;
                         }
 
-                        if (!HasBegunAttacking && Suspect.DistanceTo(player.GetOffsetPosition(Vector3.RelativeFront)) < 30f && SuspectAction == 2)
+                        if (!HasBegunAttacking && Suspect.DistanceTo(player.GetOffsetPosition(Vector3.RelativeFront)) < 30f && SuspectAction == 1)
                         {
                             Suspect.Tasks.ClearImmediately();
-                            Suspect.Tasks.FightAgainst(player);
                             Settings.InvolvedInFights++;
                             Settings.Stats.SelectSingleNode("Stats/InvolvedInFights").InnerText = Settings.InvolvedInFights.ToString();
                             Settings.Stats.Save(Settings.xmlpath);
                             StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
+                            Suspect.Tasks.FightAgainst(player);
+                            Game.DisplaySubtitle("~r~Suspect:~w~ I hate this country, and I hate you!");
                             while (Suspect.Exists() && !Functions.IsPedArrested(Suspect) && Suspect.IsAlive)
                             {
                                 GameFiber.Yield();
@@ -272,6 +284,7 @@ namespace DynamicCallouts.Callouts
 
             CalloutRunning = false;
             if (LocationBlip) LocationBlip.Delete();
+            if (SuspectBlip.Exists()) SuspectBlip.Delete();
             if (Suspect) Suspect.Dismiss();
         }
     }

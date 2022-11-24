@@ -2,6 +2,10 @@
 using Rage;
 using System.Net;
 using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Diagnostics;
+using System.Net.Http;
 
 namespace DynamicCallouts.VersionChecker
 {
@@ -52,5 +56,53 @@ namespace DynamicCallouts.VersionChecker
                 return false;
             }
         }
+
+        /*public static async System.Threading.Tasks.Task<bool> isRNUIUpdateAvailable()
+        {
+            GitHubClient client = new GitHubClient(new ProductHeaderValue("RAGENativeUI"));
+            IReadOnlyList<Release> releases = await client.Repository.Release.GetAll("alexguirre", "RAGENativeUI");
+
+            var versionInfo = FileVersionInfo.GetVersionInfo("RAGENativeUI");
+
+            Version latestGitHubVersion = new Version(releases[0].TagName);
+            Version localVersion = new Version(versionInfo.ToString());
+
+            int versionComparison = localVersion.CompareTo(latestGitHubVersion);
+            if (versionComparison < 0)
+            {
+                GameFiber.Wait(35000);
+                Game.DisplayNotification("commonmenu", "mp_alerttriangle", "~w~DynamicCallouts Warning", "~y~A new RAGENativeUI Update is available!", "Current Version: ~r~" + localVersion + "~w~<br>New Version: ~g~" + latestGitHubVersion + "<br>~r~Please update to the latest version!");
+                Game.Console.Print();
+                Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                Game.Console.Print();
+                Game.Console.Print("[WARNING]: A newer version of RAGENativeUI is available! Update to the latest version or play on your own risk.");
+                Game.Console.Print("[LOG]: Current Version:  " + localVersion);
+                Game.Console.Print("[LOG]: New Version:  " + latestGitHubVersion);
+                Game.Console.Print();
+                Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                Game.Console.Print();
+                return true;
+            }
+            else if (versionComparison > 0)
+            {
+                GameFiber.Wait(35000);
+                Game.DisplayNotification("commonmenu", "mp_alerttriangle", "~w~DynamicCallouts Warning", "~y~RAGENativeUI", "Your local version is greater than the one on GitHub. Current Version: ~r~" + localVersion + "~w~<br><Version on GitHub: ~g~" + latestGitHubVersion + "<br>~r~Please get this fixed!");
+                Game.Console.Print();
+                Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                Game.Console.Print();
+                Game.Console.Print("[WARNING]: Local version is greater than the released version. Please get this fixed.");
+                Game.Console.Print("[LOG]: Current Version:  " + localVersion);
+                Game.Console.Print("[LOG]: GitHub Version:  " + latestGitHubVersion);
+                Game.Console.Print();
+                Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                Game.Console.Print();
+                return false;
+            }
+            else 
+            {
+                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "~w~DynamicCallouts", "", "Detected the ~g~latest~w~ version of ~y~RAGENativeUI~w~!");
+                return false;
+            }
+        }*/
     }
 }

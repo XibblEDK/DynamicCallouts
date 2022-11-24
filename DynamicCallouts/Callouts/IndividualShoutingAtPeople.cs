@@ -63,7 +63,7 @@ namespace DynamicCallouts.Callouts
 
         private Ped Victim;
         private Ped Suspect;
-        private Ped player = Game.LocalPlayer.Character;
+        private Ped player => Game.LocalPlayer.Character;
 
         private int MainScenario;
         private int SuspectAction;
@@ -135,11 +135,11 @@ namespace DynamicCallouts.Callouts
         {
             if (Main.CalloutInterface)
             {
-                CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 2", "");
+                CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 1", "");
             }
             else
             {
-                Game.DisplayNotification("Respond with ~y~Code 2~w~.");
+                Game.DisplayNotification("Respond with ~g~Code 1~w~.");
             }
 
             base.OnCalloutDisplayed();
@@ -253,12 +253,12 @@ namespace DynamicCallouts.Callouts
                     End();
                 }
 
-                Game.DisplayHelp("~y~" + Settings.InteractionKey1 + ":~b~ Let the Victim Help You Search for the Suspect. ~y~" + Settings.InteractionKey2 + ":~b~ Search for the Suspect Yourself.");
+                Game.DisplayHelp("~y~" + Settings.InteractionKey1 + ":~b~ Let the Victim Help You Search for the Suspect. ~y~" + Settings.InteractionKey2 + ":~b~ Search for the Suspect Yourself.", true);
                 CallHandler.IdleAction(Victim, false);
                 while (!Game.IsKeyDown(Settings.InteractionKey1) && !Game.IsKeyDown(Settings.InteractionKey2)) GameFiber.Wait(0);
                 Victim.Tasks.ClearImmediately();
-                if (Game.IsKeyDown(Settings.InteractionKey1)) Follow();
-                else Search();
+                if (Game.IsKeyDown(Settings.InteractionKey1)) { Game.HideHelp(); Follow(); }
+                else if (Game.IsKeyDown(Settings.InteractionKey2)) { Game.HideHelp(); Search(); }
             }
         }
 
@@ -272,16 +272,18 @@ namespace DynamicCallouts.Callouts
                 if (Main.CalloutInterface) CalloutInterfaceFunctions.SendMessage(this, "Victim is helping to finding the Suspect.");
 
                 while (!Game.LocalPlayer.Character.IsInAnyPoliceVehicle) { GameFiber.Wait(0); }
-                Game.DisplayHelp("~y~" + Settings.InteractionKey1 + ": ~b~ Tell the Victim to Enter the Passenger Seat. ~y~" + Settings.InteractionKey2 + ":~b~ Tell the Victim to Enter the Rear Seat.");
+                Game.DisplayHelp("~y~" + Settings.InteractionKey1 + ": ~b~ Tell the Victim to Enter the Passenger Seat. ~y~" + Settings.InteractionKey2 + ":~b~ Tell the Victim to Enter the Rear Seat.", true);
                 while (!Game.IsKeyDown(Settings.InteractionKey1) && !Game.IsKeyDown(Settings.InteractionKey2)) GameFiber.Wait(0);
                 int SeatIndex;
                 if (Game.IsKeyDown(Settings.InteractionKey1))
                 {
+                    Game.HideHelp();
                     SeatIndex = (int)Game.LocalPlayer.Character.CurrentVehicle.GetFreePassengerSeatIndex();
                     Victim.Tasks.EnterVehicle(Game.LocalPlayer.Character.CurrentVehicle, SeatIndex, EnterVehicleFlags.None).WaitForCompletion();
                 }
                 else
                 {
+                    Game.HideHelp();
                     SeatIndex = (int)Game.LocalPlayer.Character.CurrentVehicle.GetFreeSeatIndex(1, 2);
                     Victim.Tasks.EnterVehicle(Game.LocalPlayer.Character.CurrentVehicle, SeatIndex, EnterVehicleFlags.None).WaitForCompletion();
                 }
@@ -396,11 +398,10 @@ namespace DynamicCallouts.Callouts
                     if (Functions.IsPedArrested(Suspect) && Suspect.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Attempting to ~r~Assault an Officer."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights; }
                     else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was unfortunately ~r~Killed~w~ for ~r~Assaulting an Officer."); }
                 }
+                GameFiber.Wait(2000);
+                Functions.PlayScannerAudio("REPORT_RESPONSE_COPY_02");
+                GameFiber.Wait(2000);
             }
-            else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was ~r~Killed~w~ Attempting to ~r~Assault an Officer."); }
-            GameFiber.Wait(2000);
-            Functions.PlayScannerAudio("REPORT_RESPONSE_COPY_02");
-            GameFiber.Wait(2000);
         }
 
         private void Flee()

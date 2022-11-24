@@ -22,6 +22,7 @@ namespace DynamicCallouts.Utilities
         static Random random = new Random();
         public static string enteredText;
         private static string[] VehicleModels;
+        public static bool IsDialogueDone = false;
 
         private static string[,] FemaleCopAnim = new string[,] {
             {"amb@world_human_cop_idles@female@base", "base"},
@@ -139,6 +140,7 @@ namespace DynamicCallouts.Utilities
                     count++;
                 }
             }
+            IsDialogueDone = true;
         }
 
         public static void IdleAction(Ped ped, bool iscop)

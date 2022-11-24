@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace DynamicCallouts.Callouts
         private Vehicle Tanker;
 
         private Ped Aggressor;
-        private Ped player = Game.LocalPlayer.Character;
+        private Ped player => Game.LocalPlayer.Character;
 
         private Vector3 Spawnpoint;
         private Vector3 tankerSpawnpoint;
@@ -41,23 +42,10 @@ namespace DynamicCallouts.Callouts
             }
 
             Spawnpoint = World.GetNextPositionOnStreet(player.Position.Around(350f));
-            tankerSpawnpoint = World.GetNextPositionOnStreet(player.Position.Around(340));
-
-            Aggressor = new Ped("s_m_m_trucker_01", Spawnpoint, 0f);
-
-            Lorry = new Vehicle("PHANTOM", Spawnpoint);
-
-            Tanker = new Vehicle(TruckerList[new Random().Next((int)TruckerList.Length)], tankerSpawnpoint);
-
-            if (!Aggressor.Exists()) return false;
-            if (!Tanker.Exists()) return false;
-            if (!Lorry.Exists()) return false;
-
-            Aggressor.WarpIntoVehicle(Lorry, -1);
-            Lorry.Trailer = Tanker;
+            tankerSpawnpoint = World.GetNextPositionOnStreet(player.Position.Around(350f));
 
             ShowCalloutAreaBlipBeforeAccepting(Spawnpoint, 15f);
-            AddMinimumDistanceCheck(5f, Aggressor.Position);
+            AddMinimumDistanceCheck(100f, Spawnpoint);
             Functions.PlayScannerAudioUsingPosition("CRIME_OFFICER_IN_NEED_OF_ASSISTANCE_01 CRIME_RESIST_ARREST_02", Spawnpoint);
 
             CalloutMessage = "[DYNC] Lorry Pursuit";
@@ -75,7 +63,7 @@ namespace DynamicCallouts.Callouts
             }
             else
             {
-                Game.DisplayNotification("Respond with ~y~Code 2~w~.");
+                Game.DisplayNotification("Respond with ~r~Code 3~w~.");
             }
 
             base.OnCalloutDisplayed();
@@ -83,6 +71,12 @@ namespace DynamicCallouts.Callouts
 
         public override bool OnCalloutAccepted()
         {
+            Aggressor = new Ped("s_m_m_trucker_01", Spawnpoint, 0f);
+            Lorry = new Vehicle("PHANTOM", Spawnpoint);
+            Tanker = new Vehicle(TruckerList[new Random().Next((int)TruckerList.Length)], tankerSpawnpoint);
+            Aggressor.WarpIntoVehicle(Lorry, -1);
+            Lorry.Trailer = Tanker;
+
             Settings.RespondedCallouts++;
             Settings.Stats.SelectSingleNode("Stats/RespondedCallouts").InnerText = Settings.RespondedCallouts.ToString();
             Settings.Stats.Save(Settings.xmlpath);
@@ -93,7 +87,10 @@ namespace DynamicCallouts.Callouts
             pursuit = Functions.CreatePursuit();
             Functions.AddPedToPursuit(pursuit, Aggressor);
             Functions.SetPursuitIsActiveForPlayer(pursuit, true);
-            Functions.RequestBackup(Spawnpoint, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
+            if (Settings.AutomaticBackup)
+            {
+                Functions.RequestBackup(Spawnpoint, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
+            }
 
             Settings.Pursuits++;
             Settings.Stats.SelectSingleNode("Stats/Pursuits").InnerText = Settings.Pursuits.ToString();
@@ -126,7 +123,9 @@ namespace DynamicCallouts.Callouts
                     while (CalloutRunning)
                     {
                         GameFiber.Yield();
-                        if (!Functions.IsPursuitStillRunning(pursuit)) { End(); }
+                        if (!Functions.IsPursuitStillRunning(pursuit)) End();
+                        if (player.IsDead) End();
+                        if (Game.IsKeyDown(Settings.EndCall)) End();
                     }
                 }
                 catch (Exception e)
@@ -155,6 +154,7 @@ namespace DynamicCallouts.Callouts
                 Game.DisplayNotification("~g~Code 4~w~, return to patrol.");
                 Functions.PlayScannerAudio("ATTENTION_ALL_UNITS WE_ARE_CODE_4");
             }
+            if (Functions.IsPursuitStillRunning(pursuit)) Functions.ForceEndPursuit(pursuit);
 
             CalloutRunning = false;
             if (ABlip.Exists()) ABlip.Delete();

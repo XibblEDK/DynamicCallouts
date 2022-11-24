@@ -20,7 +20,7 @@ namespace DynamicCallouts.Callouts
 
         private Ped Suspect;
         private Ped DeadPed;
-        private Ped player = Game.LocalPlayer.Character;
+        private Ped player => Game.LocalPlayer.Character;
 
         private Blip SuspectBlip;
 

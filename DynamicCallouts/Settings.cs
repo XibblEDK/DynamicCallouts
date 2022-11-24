@@ -62,6 +62,6 @@ namespace DynamicCallouts
             Pursuits = Convert.ToInt32(Stats.SelectSingleNode("Stats/Pursuits").InnerText);
             InvolvedInFights = Convert.ToInt32(Stats.SelectSingleNode("Stats/InvolvedInFights").InnerText);
         }
-        public static readonly string PluginVersion = "1.0.0.0";
+        public static readonly string PluginVersion = "1.0.0.1";
     }
 }
