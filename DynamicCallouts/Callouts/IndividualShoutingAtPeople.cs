@@ -173,6 +173,7 @@ namespace DynamicCallouts.Callouts
 
         public override void OnCalloutNotAccepted()
         {
+            Victim.Delete();
             base.OnCalloutNotAccepted();
         }
 
@@ -217,7 +218,7 @@ namespace DynamicCallouts.Callouts
                 Game.DisplayHelp("Speak to the ~b~Victim");
 
                 NativeFunction.Natives.TASK_TURN_PED_TO_FACE_ENTITY(Victim, player, -1);
-                while (player.DistanceTo(Victim) >= 5) GameFiber.Wait(0);
+                while (player.DistanceTo(Victim) >= 5f) GameFiber.Wait(0);
                 Game.DisplayHelp("Press ~y~" + Settings.Dialog + " ~w~to Speak with the ~b~Victim");
                 while (!Game.IsKeyDown(Settings.Dialog)) GameFiber.Wait(0);
 
@@ -420,8 +421,8 @@ namespace DynamicCallouts.Callouts
                 {
                     Functions.RequestBackup(Suspect.Position, LSPD_First_Response.EBackupResponseType.Code3, LSPD_First_Response.EBackupUnitType.LocalUnit);
                 }
-                Functions.SetPursuitIsActiveForPlayer(MainPursuit, true);
                 Functions.AddPedToPursuit(MainPursuit, Suspect);
+                Functions.SetPursuitIsActiveForPlayer(MainPursuit, true);
                 while (Functions.IsPursuitStillRunning(MainPursuit)) { GameFiber.Wait(0); }
                 if (Suspect.Exists())
                 {

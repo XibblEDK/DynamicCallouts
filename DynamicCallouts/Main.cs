@@ -13,6 +13,8 @@ using DynamicCallouts.VersionChecker;
 using DynamicCallouts;
 using DynamicCallouts.Utilities;
 using RAGENativeUI.Elements;
+using Rage.ConsoleCommands;
+using System.Runtime.InteropServices;
 
 [assembly: Rage.Attributes.Plugin("DynamicCallouts", Description = "LSPDFR Callout Pack", Author = "XibblE, TheBroHypers")]
 namespace DynamicCallouts
@@ -94,6 +96,8 @@ namespace DynamicCallouts
             Functions.RegisterCallout(typeof(GunshotsReported));
             Functions.RegisterCallout(typeof(GarbageOnFire));
             Functions.RegisterCallout(typeof(LorryPursuit));
+            Functions.RegisterCallout(typeof(SuspiciousCarPulledOver));
+            Game.AddConsoleCommands();
             Game.Console.Print("[LOG]: All callouts were loaded!");
             Game.Console.Print();
             Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");

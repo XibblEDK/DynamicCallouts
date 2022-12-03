@@ -25,11 +25,16 @@ namespace DynamicCallouts
         internal static bool GunshotsReported = true;
         internal static bool GarbageOnFire = true;
         internal static bool LorryPursuit = true;
+        internal static bool PublicUrination = true;
+        internal static bool SuspiciousCarPulledOver = true;
         internal static Keys EndCall = Keys.End;
         internal static Keys Dialog = Keys.Y;
         internal static Keys Menu;
         internal static Keys InteractionKey1 = Keys.K;
         internal static Keys InteractionKey2 = Keys.L;
+        internal static Keys StopThePedKey = Keys.E;
+        internal static Keys StopThePedKey1 = Keys.None;
+        internal static bool IsSTPKeyModifierSet;
         internal static string CallSign;
         internal static string OfficerName = "Jared Anthony";
         internal static InitializationFile ini;
@@ -49,11 +54,14 @@ namespace DynamicCallouts
             AutomaticBackup = ini.ReadBoolean("Miscellaneous", "AutomaticBackup", true);
             CallSign = ini.ReadString("Officer Settings", "CallSign", "1-Lincoln-18");
             OfficerName = ini.ReadString("Officer Settings", "OfficerName", "Jared Anthony");
+
             IndividualShoutingAtPeople = ini.ReadBoolean("Callouts", "IndividualShoutingAtPeople", true);
             ATMRobbery = ini.ReadBoolean("Callouts", "ATMRobbery", true);
             GunshotsReported = ini.ReadBoolean("Callouts", "GunshotsReported", true);
             GarbageOnFire = ini.ReadBoolean("Callouts", "GarbageOnFire", true);
             LorryPursuit = ini.ReadBoolean("Callouts", "LorryPursuit", true);
+            PublicUrination = ini.ReadBoolean("Callouts", "PubicUrination", true);
+            SuspiciousCarPulledOver = ini.ReadBoolean("Callouts", "SuspiciousCarPulledOver", true);
 
             Game.Console.Print("[LOG]: Loading Stats file from DynamicCallouts");
             Stats.Load(xmlpath);
@@ -61,6 +69,18 @@ namespace DynamicCallouts
             Arrests = Convert.ToInt32(Stats.SelectSingleNode("Stats/Arrests").InnerText);
             Pursuits = Convert.ToInt32(Stats.SelectSingleNode("Stats/Pursuits").InnerText);
             InvolvedInFights = Convert.ToInt32(Stats.SelectSingleNode("Stats/InvolvedInFights").InnerText);
+
+            if (Main.STP)
+            {
+                var stpini = new InitializationFile("Plugins/LSPDFR/StopThePed.ini");
+                StopThePedKey = stpini.ReadEnum("Keys", "StopPedKey", Keys.E);
+                if (!stpini.ReadEnum("Keys", "StopPedModifierKey", Keys.None).Equals(Keys.None))
+                {
+                    StopThePedKey1 = stpini.ReadEnum("Keys", "StopPedModifierKey", Keys.None);
+                    IsSTPKeyModifierSet = true;
+                }
+                else { IsSTPKeyModifierSet = false; }
+            }
         }
         public static readonly string PluginVersion = "1.0.0.1";
     }

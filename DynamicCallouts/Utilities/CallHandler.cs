@@ -143,6 +143,20 @@ namespace DynamicCallouts.Utilities
             IsDialogueDone = true;
         }
 
+        public static void DialogueWithoutAnim(List<string> dialogue)
+        {
+            count = 0;
+            while (count < dialogue.Count)
+            {
+                GameFiber.Yield();
+                if (Game.IsKeyDown(Settings.Dialog))
+                {
+                    Game.DisplaySubtitle(dialogue[count]);
+                    count++;
+                }
+            }
+        }
+
         public static void IdleAction(Ped ped, bool iscop)
         {
             if (ped != null && ped.Exists())

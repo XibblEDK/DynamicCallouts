@@ -86,7 +86,7 @@
             {
                 UIMenuItem keybindsBindItem = new UIMenuItem("Keybinds");
 
-                var EndCall = new UIMenuListScrollerItem<string>("EndCall", "Press Enter to change the keybind of EndCall", new[] { Convert.ToString(Settings.EndCall), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9"});
+                var EndCall = new UIMenuListScrollerItem<string>("EndCall", "Press Enter to change the keybind of EndCall", new[] { Convert.ToString(Settings.EndCall), "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "Insert", "Home", "Delete", "End", "PageUp", "PageDown", "NumLock", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9" });
                 EndCall.Activated += (s, e) =>
                 {
                     Settings.ini.Write("Keys", "EndCall", " " + EndCall.SelectedItem);
@@ -197,7 +197,7 @@
                         Settings.ini.Write("Callouts", "GunshotsReported", " " + false);
                     Settings.GunshotsReported = Settings.ini.ReadBoolean("Callouts", "GunshotsReported", true);
                 };
-                
+
                 var GarbageOnFire = new UIMenuCheckboxItem("GarbageOnFire", Settings.GarbageOnFire);
                 GarbageOnFire.CheckboxEvent += (s, c) =>
                 {
@@ -210,6 +210,16 @@
 
                 var LorryPursuit = new UIMenuCheckboxItem("LorryPursuit", Settings.LorryPursuit);
                 LorryPursuit.CheckboxEvent += (s, c) =>
+                {
+                    if (LorryPursuit.Checked)
+                        Settings.ini.Write("Callouts", "LorryPursuit", " " + true);
+                    if (!LorryPursuit.Checked)
+                        Settings.ini.Write("Callouts", "LorryPursuit", " " + false);
+                    Settings.LorryPursuit = Settings.ini.ReadBoolean("Callouts", "LorryPursuit", true);
+                };
+
+                var SuspiciousCarPulledOver = new UIMenuCheckboxItem("SuspiciousCarPulledOver", Settings.SuspiciousCarPulledOver);
+                SuspiciousCarPulledOver.CheckboxEvent += (s, c) =>
                 {
                     if (LorryPursuit.Checked)
                         Settings.ini.Write("Callouts", "LorryPursuit", " " + true);
