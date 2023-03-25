@@ -172,9 +172,6 @@ namespace DynamicCallouts.Utilities
                     {
 
                         int animation = random.Next(0, MaleCopAnim.Length / 2);
-                        //Game.LogTrivial("YOBBINCALLOUTS: There are "+MaleCopAnim.Length+"animations");
-                        //Game.LogTrivial(MaleCopAnim[animation, 0]);
-                        //Game.LogTrivial(MaleCopAnim[animation, 1]);
                         ped.Tasks.PlayAnimation(MaleCopAnim[animation, 0], MaleCopAnim[animation, 1], -1, AnimationFlags.Loop);
                     }
                 }
@@ -242,7 +239,7 @@ namespace DynamicCallouts.Utilities
             {
                 locationReturned = false;
             }
-            else //test this (else wasn't here before)
+            else
             {
                 SpawnPoint = (Vector3)closeLocations[random.Next(0, closeLocations.Count)];
                 locationReturned = true;

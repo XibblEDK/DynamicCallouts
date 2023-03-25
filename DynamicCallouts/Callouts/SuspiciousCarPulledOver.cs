@@ -283,6 +283,7 @@ namespace DynamicCallouts.Callouts
                                 
                                 Random r = new Random();
                                 TookTest = r.Next(0, 2) == 0;
+                                Game.Console.Print("TookTest = " +TookTest.ToString());
                                 if (TookTest)
                                 {
                                     CallHandler.Dialogue(TookTestDialogue, Cop);
@@ -302,7 +303,7 @@ namespace DynamicCallouts.Callouts
                                 Cop.Tasks.ClearImmediately();
                                 CallHandler.IdleAction(Cop, true);
                                 if (TookTest) { Game.DisplayHelp("Talk to the ~y~Driver", false); TookTestVoid(); }
-                                else { if (Settings.IsSTPKeyModifierSet) { Game.DisplayHelp("Get the ~y~Driver~w~ out of the vehicle to initiate the drug test. Tip: Double press ~y~" + Settings.StopThePedKey + " + " + Settings.StopThePedKey1 + "~w~ to stop the ped"); } else if (!Settings.IsSTPKeyModifierSet) { Game.DisplayHelp("Get the ~y~Driver~w~ out of the vehicle to initiate the drug test. Tip: Double press ~y~" + Settings.StopThePedKey + "~w~ to stop the ped"); } else { Game.DisplayHelp("Get the ~y~Driver~w~ out of the vehicle to initiate the drug test."); } while (Suspect.IsInAnyVehicle(false)) GameFiber.Wait(0); DidntTakeTestVoid();  }
+                                else { if (Settings.IsSTPKeyModifierSet) { Game.DisplayHelp("Get the ~y~Driver~w~ out of the vehicle to initiate the drug test. Tip: Double press ~y~" + Settings.StopThePedKey + " + " + Settings.StopThePedKey1 + "~w~ to stop the ped"); } else if (Settings.IsSTPKeyModifierSet) { Game.DisplayHelp("Get the ~y~Driver~w~ out of the vehicle to initiate the drug test. Tip: Double press ~y~" + Settings.StopThePedKey + "~w~ to stop the ped"); } else { Game.DisplayHelp("Get the ~y~Driver~w~ out of the vehicle to initiate the drug test."); } while (Suspect.IsInAnyVehicle(false)) GameFiber.Wait(0); DidntTakeTestVoid();  }
                                 break;
                             }
                         }
@@ -345,7 +346,7 @@ namespace DynamicCallouts.Callouts
             if (CopBlip.Exists()) CopBlip.Delete();
             if (SuspectCar.Exists()) SuspectCar.Delete();
             if (CopCar.Exists()) CopCar.Delete();
-            if (Drug.Exists()) Drug.SafelyDelete();
+            if (Drug.Exists()) Drug.Delete();
             if (Drug1.Exists()) Drug1.Delete();
             if (Drug2.Exists()) Drug2.Delete();
             if (Drug3.Exists()) Drug3.Delete();
@@ -463,7 +464,8 @@ namespace DynamicCallouts.Callouts
             {
                 Cop.Tasks.DriveToPosition(CopCar, SuspectCar.GetOffsetPosition(new Vector3(8f, 0f, 0f)), 60f, VehicleDrivingFlags.DriveAroundObjects, 100f).WaitForCompletion();
                 Cop.Tasks.CruiseWithVehicle(CopCar, 60f, VehicleDrivingFlags.FollowTraffic);
-                CopBlip.SafelyDelete();
+                if (CopBlip.Exists())
+                    CopBlip.Delete();
             }
         }
 
@@ -472,7 +474,7 @@ namespace DynamicCallouts.Callouts
             if (CalloutRunning)
             {
                 Game.DisplayHelp("Go to the back of the van to take the test.");
-                while (Drug3.DistanceTo(player) < 1f) GameFiber.Wait(0);
+                while (player.DistanceTo(Drug3.Position) < 1f) GameFiber.Wait(0);
                 Game.DisplayHelp("Press ~y~" + Settings.InteractionKey1 + "~w~ to take the drug test.");
                 while (!Game.IsKeyDown(Settings.InteractionKey1)) GameFiber.Wait(0);
                 // TODO: Play search animation

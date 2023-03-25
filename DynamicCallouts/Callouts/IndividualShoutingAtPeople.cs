@@ -173,7 +173,6 @@ namespace DynamicCallouts.Callouts
 
         public override void OnCalloutNotAccepted()
         {
-            Victim.Delete();
             base.OnCalloutNotAccepted();
         }
 
