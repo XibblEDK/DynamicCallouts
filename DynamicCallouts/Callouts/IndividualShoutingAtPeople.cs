@@ -385,6 +385,11 @@ namespace DynamicCallouts.Callouts
         {
             if (CalloutRunning)
             {
+                Settings.InvolvedInFights++;
+                Settings.Stats.SelectSingleNode("Stats/InvolvedInFights").InnerText = Settings.InvolvedInFights.ToString();
+                Settings.Stats.Save(Settings.xmlpath);
+                StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
+
                 Suspect.Tasks.ClearImmediately();
                 Suspect.Inventory.Weapons.Clear();
                 GameFiber.Wait(500);

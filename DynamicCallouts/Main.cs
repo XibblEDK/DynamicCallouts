@@ -15,6 +15,8 @@ using DynamicCallouts.Utilities;
 using RAGENativeUI.Elements;
 using Rage.ConsoleCommands;
 using System.Runtime.InteropServices;
+using Rage.Native;
+using Rage.Attributes;
 
 [assembly: Rage.Attributes.Plugin("DynamicCallouts", Description = "LSPDFR Callout Pack", Author = "XibblE, TheBroHypers")]
 namespace DynamicCallouts
@@ -40,6 +42,7 @@ namespace DynamicCallouts
             {
                 GameFiber.StartNew(delegate
                 {
+                    Game.AddConsoleCommands();
                     Settings.LoadSettings();
                     Menu.Main();
                     StatsView.Main();
@@ -95,12 +98,24 @@ namespace DynamicCallouts
             Functions.RegisterCallout(typeof(GunshotsReported));
             Functions.RegisterCallout(typeof(GarbageOnFire));
             Functions.RegisterCallout(typeof(LorryPursuit));
-            Functions.RegisterCallout(typeof(SuspiciousCarPulledOver));
+            Functions.RegisterCallout(typeof(HusbandMurdered));
             Game.AddConsoleCommands();
             Game.Console.Print("[LOG]: All callouts were loaded!");
             Game.Console.Print();
             Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Game.Console.Print();
+        }
+
+        [ConsoleCommand]
+        private static void Command_GoToHouseInterior()
+        {
+            Game.LocalPlayer.Character.Position = new Vector3(266.139f, -1007.465f, -101.009f);
+        }
+
+        [ConsoleCommand]
+        private static void Command_GetVector3FeetLocation()
+        {
+            Game.LogTrivial(Game.LocalPlayer.Character.GetOffsetPosition(Vector3.RelativeBottom).ToString());
         }
     }
 }

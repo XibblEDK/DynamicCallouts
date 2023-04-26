@@ -25,8 +25,7 @@ namespace DynamicCallouts
         internal static bool GunshotsReported = true;
         internal static bool GarbageOnFire = true;
         internal static bool LorryPursuit = true;
-        internal static bool PublicUrination = true;
-        internal static bool SuspiciousCarPulledOver = true;
+        internal static bool HusbandMurdered = true;
         internal static Keys EndCall = Keys.End;
         internal static Keys Dialog = Keys.Y;
         internal static Keys Menu;
@@ -60,8 +59,7 @@ namespace DynamicCallouts
             GunshotsReported = ini.ReadBoolean("Callouts", "GunshotsReported", true);
             GarbageOnFire = ini.ReadBoolean("Callouts", "GarbageOnFire", true);
             LorryPursuit = ini.ReadBoolean("Callouts", "LorryPursuit", true);
-            PublicUrination = ini.ReadBoolean("Callouts", "PubicUrination", true);
-            SuspiciousCarPulledOver = ini.ReadBoolean("Callouts", "SuspiciousCarPulledOver", true);
+            HusbandMurdered = ini.ReadBoolean("Callouts", "HusbandMurdered", true);
 
             Game.Console.Print("[LOG]: Loading Stats file from DynamicCallouts");
             Stats.Load(xmlpath);
@@ -82,6 +80,6 @@ namespace DynamicCallouts
                 else { IsSTPKeyModifierSet = false; }
             }
         }
-        public static readonly string PluginVersion = "1.0.0.1";
+        public static readonly string PluginVersion = "1.0.0.2";
     }
 }

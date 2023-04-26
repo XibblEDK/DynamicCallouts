@@ -218,17 +218,17 @@
                     Settings.LorryPursuit = Settings.ini.ReadBoolean("Callouts", "LorryPursuit", true);
                 };
 
-                var SuspiciousCarPulledOver = new UIMenuCheckboxItem("SuspiciousCarPulledOver", Settings.SuspiciousCarPulledOver);
-                SuspiciousCarPulledOver.CheckboxEvent += (s, c) =>
+                var HusbandMurdered = new UIMenuCheckboxItem("HusbandMurdered", Settings.HusbandMurdered);
+                HusbandMurdered.CheckboxEvent += (s, c) =>
                 {
-                    if (LorryPursuit.Checked)
-                        Settings.ini.Write("Callouts", "LorryPursuit", " " + true);
-                    if (!LorryPursuit.Checked)
-                        Settings.ini.Write("Callouts", "LorryPursuit", " " + false);
-                    Settings.LorryPursuit = Settings.ini.ReadBoolean("Callouts", "LorryPursuit", true);
+                    if (HusbandMurdered.Checked)
+                        Settings.ini.Write("Callouts", "HusbandMurdered", " " + true);
+                    if (!HusbandMurdered.Checked)
+                        Settings.ini.Write("Callouts", "HusbandMurdered", " " + false);
+                    Settings.HusbandMurdered = Settings.ini.ReadBoolean("Callouts", "HusbandMurdered", true);
                 };
 
-                Callouts.AddItems(IndividualShoutingAtPeople, ATMRobbery, GunshotsReported, GarbageOnFire, LorryPursuit);
+                Callouts.AddItems(IndividualShoutingAtPeople, ATMRobbery, GunshotsReported, GarbageOnFire, HusbandMurdered);
                 settings.AddItems(calloutsBindItem);
                 settings.BindMenuToItem(Callouts, calloutsBindItem);
             }

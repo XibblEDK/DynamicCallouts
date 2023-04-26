@@ -76,6 +76,35 @@ namespace DynamicCallouts.Utilities
             new Vector3(-2545.63f, 2316.986f, 33.21579f),
         };
 
+        private static List<string> MalePedList = new List<string>
+        {
+            "ig_bankman",
+            "u_m_m_bankman",
+            "a_m_m_bevhills_01",
+            "a_m_y_bevhills_01",
+            "a_m_m_bevhills_02",
+            "a_m_y_bevhills_02",
+            "a_m_y_busicas_01",
+            "a_m_m_business_01",
+            "a_m_y_business_01",
+            "a_m_y_business_01",
+            "a_m_y_business_03"
+        };
+
+        private static List<string> FemalePedList = new List<string>
+        {
+            "a_f_y_bevhills_01",
+            "a_f_m_bevhills_01",
+            "a_f_m_bevhills_02",
+            "a_f_y_bevhills_02",
+            "a_f_y_bevhills_03",
+            "a_f_y_business_02",
+            "a_f_m_business_02",
+            "a_f_y_business_01",
+            "a_f_y_hipster_03",
+            "a_f_y_hipster_02"
+        };
+
         public enum MarkerType
         {
             UpsideDownCone = 0,
@@ -212,12 +241,24 @@ namespace DynamicCallouts.Utilities
             Game.LocalPlayer.HasControl = true;
         }
 
-        public static void EnterHouse(Vector3 doorLocation, Vector3 teleportTo)
+        public static void EnterHouse(Vector3 teleportTo)
         {
             GameFiber.Wait(1250);
             Game.FadeScreenOut(1500, true);
             Game.LocalPlayer.HasControl = false;
             Game.LocalPlayer.Character.Position = teleportTo;
+            GameFiber.Wait(2500);
+            Game.FadeScreenIn(1500, true);
+            Game.LocalPlayer.HasControl = true;
+        }
+
+        public static void EnterHouse(Vector3 teleportTo, float heading)
+        {
+            GameFiber.Wait(1250);
+            Game.FadeScreenOut(1500, true);
+            Game.LocalPlayer.HasControl = false;
+            Game.LocalPlayer.Character.Position = teleportTo;
+            Game.LocalPlayer.Character.Heading = heading;
             GameFiber.Wait(2500);
             Game.FadeScreenIn(1500, true);
             Game.LocalPlayer.HasControl = true;
@@ -304,6 +345,52 @@ namespace DynamicCallouts.Utilities
             var veh = new Vehicle(VehicleModels[model], SpawnPoint, Heading);
             if (persistent) veh.IsPersistent = true; //vehicle is marked as persistent by default
             return veh;
+        }
+
+        public static void SafelyDelete(Entity entity)
+        {
+            if (entity.Exists())
+            {
+                entity.Delete();
+            }
+        }
+
+        public static void SafelyDelete(Blip blip)
+        {
+            if (blip.Exists())
+            {
+                blip.Delete();
+            }
+        }
+
+        public static Ped SpawnMalePed(Vector3 position, float heading)
+        {
+            return new Ped(MalePedList[random.Next(0, MalePedList.Count)], position, heading);
+        }
+
+        public static Ped SpawnMalePed(Vector3 position)
+        {
+            return new Ped(MalePedList[random.Next(0, MalePedList.Count)], position, 0f);
+        }
+        
+        public static Ped SpawnFemalePed(Vector3 position, float heading)
+        {
+            return new Ped(FemalePedList[random.Next(0, FemalePedList.Count)], position, heading);
+        }
+
+        public static Ped SpawnFemalePed(Vector3 position)
+        {
+            return new Ped(FemalePedList[random.Next(0, FemalePedList.Count)], position, 0f);
+        }
+
+        public static void ApplyDamagePackToPed(Ped ped, string damagePack, float damage, float multiplier)
+        {
+            NativeFunction.Natives.APPLY_PED_DAMAGE_PACK(ped, damagePack, damage, multiplier);
+        }
+
+        public static bool MakeSurePlayerIsInRangeForCallout(float maxDistance, float minDistance, Vector3 pos)
+        {
+            return Game.LocalPlayer.Character.DistanceTo(pos) < maxDistance && Game.LocalPlayer.Character.DistanceTo(pos) > minDistance;
         }
     }
 }
