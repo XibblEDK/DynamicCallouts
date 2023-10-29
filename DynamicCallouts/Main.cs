@@ -99,6 +99,7 @@ namespace DynamicCallouts
             Functions.RegisterCallout(typeof(GarbageOnFire));
             Functions.RegisterCallout(typeof(LorryPursuit));
             Functions.RegisterCallout(typeof(HusbandMurdered));
+            //Functions.RegisterCallout(typeof(DealershipCarStolen));
             Game.AddConsoleCommands();
             Game.Console.Print("[LOG]: All callouts were loaded!");
             Game.Console.Print();

@@ -9,10 +9,12 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using CAPI = CalloutInterfaceAPI;
 
 namespace DynamicCallouts.Callouts
 {
-    [CalloutInfo("[DYNC] Lorry Pursuit", CalloutProbability.Medium)]
+    [CAPI.CalloutInterface("[DYNC] Lorry Pursuit", CalloutProbability.Medium, "A truck driver has gone crazy and is now in a pursuit.", "Code 3")]
+    //[CalloutInfo("[DYNC] Lorry Pursuit", CalloutProbability.Medium)]
     public class LorryPursuit : Callout
     {
         private string[] TruckerList = new string[] { "TRAILERS", "TANKER" };
@@ -59,7 +61,7 @@ namespace DynamicCallouts.Callouts
         {
             if (Main.CalloutInterface)
             {
-                CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 3", "LSPD");
+                //CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 3", "LSPD");
             }
             else
             {

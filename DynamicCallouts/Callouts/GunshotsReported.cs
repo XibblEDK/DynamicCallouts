@@ -7,10 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LSPD_First_Response.Mod.API;
+using CAPI = CalloutInterfaceAPI;
 
 namespace DynamicCallouts.Callouts
 {
-    [CalloutInfo("[DYNC] Gunshots Reported", CalloutProbability.Medium)]
+    [CAPI.CalloutInterface("[DYNC] Gunshots Reported", CalloutProbability.Medium, "Gunshots have been reported, respond as fast as possible.", "Code 3")]
+    //[CalloutInfo("[DYNC] Gunshots Reported", CalloutProbability.Medium)]
     public class GunshotsReported : Callout
     {
         private string[] WeaponList = new string[] { "WEAPON_PISTOL", "WEAPON_COMBATPISTOL", "WEAPON_SNSPISTOL", "WEAPON_HEAVYPISTOL", "WEAPON_VINTAGEPISTOL", "WEAPON_CERAMICPISTOL" };
@@ -68,7 +70,7 @@ namespace DynamicCallouts.Callouts
         {
             if (Main.CalloutInterface)
             {
-                CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 3", "LSPD");
+                //CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 3", "LSPD");
             }
             else
             {

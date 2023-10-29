@@ -80,6 +80,6 @@ namespace DynamicCallouts
                 else { IsSTPKeyModifierSet = false; }
             }
         }
-        public static readonly string PluginVersion = "1.0.0.2";
+        public static readonly string PluginVersion = "1.0.0.3";
     }
 }

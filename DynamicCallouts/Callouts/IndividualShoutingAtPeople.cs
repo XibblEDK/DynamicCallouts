@@ -11,10 +11,12 @@ using System.Collections;
 using DynamicCallouts.Utilities;
 using DynamicCallouts.VersionChecker;
 using System.IO;
+using CAPI = CalloutInterfaceAPI;
 
 namespace DynamicCallouts.Callouts
 {
-    [CalloutInfo("[DYNC] Individual Shouting at People", CalloutProbability.High)]
+    [CAPI.CalloutInterface("[DYNC] Individual Shouting at People", CalloutProbability.High, "Suspect is Reported to have ~y~Aggresively Shouted~w~ at Multiple Citizens.", "Code 1")]
+    //[CalloutInfo("[DYNC] Individual Shouting at People", CalloutProbability.High)]
 
     public class IndividualShoutingAtPeople : Callout
     {
@@ -135,7 +137,7 @@ namespace DynamicCallouts.Callouts
         {
             if (Main.CalloutInterface)
             {
-                CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 1", "");
+                //CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 1", "");
             }
             else
             {
@@ -186,7 +188,7 @@ namespace DynamicCallouts.Callouts
                     while (CalloutRunning)
                     {
                         while (player.DistanceTo(Victim) >= 15f && !Game.IsKeyDown(Settings.EndCall)) GameFiber.Wait(0);
-                        if (Main.CalloutInterface) CalloutInterfaceFunctions.SendMessage(this, Settings.CallSign + " Arrived on Scene. Talking to Victim");
+                        if (Main.CalloutInterface) CAPI.Functions.SendMessage(this, Settings.CallSign + " Arrived on Scene. Talking to Victim");
                         if (MainScenario == 0) AssaultOpening();
                         break;
                     }
@@ -269,7 +271,7 @@ namespace DynamicCallouts.Callouts
                 Game.DisplaySubtitle("~g~You:~w~ Sure, It Would Help a lot if You Were There to Help Me. Hop In!", 3000);
                 GameFiber.Wait(3500);
                 Game.DisplayHelp("Get in your ~g~Vehicle.");
-                if (Main.CalloutInterface) CalloutInterfaceFunctions.SendMessage(this, "Victim is helping to finding the Suspect.");
+                if (Main.CalloutInterface) CAPI.Functions.SendMessage(this, "Victim is helping to finding the Suspect.");
 
                 while (!Game.LocalPlayer.Character.IsInAnyPoliceVehicle) { GameFiber.Wait(0); }
                 Game.DisplayHelp("~y~" + Settings.InteractionKey1 + ": ~b~ Tell the Victim to Enter the Passenger Seat. ~y~" + Settings.InteractionKey2 + ":~b~ Tell the Victim to Enter the Rear Seat.", true);
@@ -327,7 +329,7 @@ namespace DynamicCallouts.Callouts
                 if (VictimBlip.Exists()) VictimBlip.Delete();
 
                 Game.DisplayHelp("Start ~o~Searching~w~ for the ~r~Suspect.");
-                if (Main.CalloutInterface) { CalloutInterfaceFunctions.SendMessage(this, "Searching for the Suspect."); }
+                if (Main.CalloutInterface) { CAPI.Functions.SendMessage(this, "Searching for the Suspect."); }
                 SuspectArea = new Blip(Suspect.Position.Around(15), 250);
                 SuspectArea.Color = Color.Orange;
                 SuspectArea.Alpha = 0.5f;

@@ -57,6 +57,9 @@
     <Reference Include="CalloutInterface">
       <HintPath>..\..\Random Things\Fivem Filer\CalloutInterface.dll</HintPath>
     </Reference>
+    <Reference Include="CalloutInterfaceAPI">
+      <HintPath>..\..\Grand Theft Auto V\plugins\CalloutInterfaceAPI.dll</HintPath>
+    </Reference>
     <Reference Include="LSPD First Response, Version=0.4.8242.35949, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Grand Theft Auto V\plugins\LSPD First Response.dll</HintPath>
@@ -91,8 +94,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalloutInterfaceFunctions.cs" />
     <Compile Include="Callouts\ATMRobbery.cs" />
+    <Compile Include="Callouts\DealershipCarStolen.cs" />
     <Compile Include="Callouts\GarbageOnFire.cs" />
     <Compile Include="Callouts\GunshotsReported.cs" />
     <Compile Include="Callouts\HusbandMurdered.cs" />

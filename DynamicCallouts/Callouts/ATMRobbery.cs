@@ -10,10 +10,12 @@ using System.Drawing;
 using System.Collections;
 using DynamicCallouts.Utilities;
 using LSPD_First_Response.Engine;
+using CAPI = CalloutInterfaceAPI;
 
 namespace DynamicCallouts.Callouts
 {
-    [CalloutInfo("[DYNC] ATM Robbery", CalloutProbability.VeryHigh)]
+    [CAPI.CalloutInterface("[DYNC] ATM Robbery", CalloutProbability.VeryHigh, "Suspect is Reported to have a ~r~weapon on him~m~.", "Code 3")]
+    //[CalloutInfo("[DYNC] ATM Robbery", CalloutProbability.VeryHigh)]
     public class ATMRobbery : Callout
     {
         private string[] WeaponList = new string[] { "WEAPON_CROWBAR", "WEAPON_KNIFE", "WEAPON_PISTOL" };
@@ -98,7 +100,7 @@ namespace DynamicCallouts.Callouts
         {
             if (Main.CalloutInterface)
             {
-                CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 3", "LSPD");
+                //CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 3", "LSPD");
             }
             else
             {

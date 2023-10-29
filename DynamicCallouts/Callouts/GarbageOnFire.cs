@@ -10,10 +10,12 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CAPI = CalloutInterfaceAPI;
 
 namespace DynamicCallouts.Callouts
 {
-    [CalloutInfo("[DYNC] Garbage on Fire", CalloutProbability.High)]
+    [CAPI.CalloutInterface("[DYNC] Garbage on Fire", CalloutProbability.High, "Citizens have reported some garbage on fire.", "Code 2")]
+    //[CalloutInfo("[DYNC] Garbage on Fire", CalloutProbability.High)]
     public class GarbageOnFire : Callout
     {
         private Random random = new Random();
@@ -128,7 +130,7 @@ namespace DynamicCallouts.Callouts
         {
             if (Main.CalloutInterface)
             {
-                CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 2", "LSPD");
+                //CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 2", "LSPD");
             }
             else
             {

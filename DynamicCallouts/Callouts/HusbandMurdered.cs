@@ -11,10 +11,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using CAPI = CalloutInterfaceAPI;
 
 namespace DynamicCallouts.Callouts
 {
-    [CalloutInfo("[DYNC] Husband Murdered", CalloutProbability.Low)]
+    [CAPI.CalloutInterface("[DYNC] Husband Murdered", CalloutProbability.Low, "A woman has dialled 911, telling her husband has been murdered in their own home!", "Code 3")]
+    //[CalloutInfo("[DYNC] Husband Murdered", CalloutProbability.Low)]
     public class HusbandMurdered : Callout
     {
         private Ped player => Game.LocalPlayer.Character;
@@ -111,6 +113,7 @@ namespace DynamicCallouts.Callouts
             CalloutMessage = "[DYNC] Husband Murdered";
             CalloutAdvisory = "A woman has dialled 911, telling her husband has been murdered in their own home!";
             CalloutPosition = calloutLocation;
+            Functions.PlayScannerAudioUsingPosition("ATTENTION_ALL_UNITS_01 WE_HAVE A_01 CRIME_DEAD_BODY_01 CODE3", calloutLocation);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -119,7 +122,7 @@ namespace DynamicCallouts.Callouts
         {
             if (Main.CalloutInterface)
             {
-                CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 3");
+                //CalloutInterfaceFunctions.SendCalloutDetails(this, "CODE 3");
             }
             else
             {
