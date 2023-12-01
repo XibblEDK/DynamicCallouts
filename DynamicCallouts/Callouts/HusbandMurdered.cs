@@ -91,6 +91,13 @@ namespace DynamicCallouts.Callouts
 
         public override bool OnBeforeCalloutDisplayed()
         {
+            if (!Settings.HusbandMurdered)
+            {
+                Game.LogTrivial("[LOG]: User has disabled GarbageOnFire, returning false.");
+                Game.LogTrivial("[LOG]: To enable the callout please change false to true in the .ini file.");
+                return false;
+            }
+
             calloutLocation = CallHandler.chooseNearestLocation(calloutPoints);
 
             if (!CallHandler.MakeSurePlayerIsInRangeForCallout(600f, 30f, calloutLocation))
@@ -113,7 +120,7 @@ namespace DynamicCallouts.Callouts
             CalloutMessage = "[DYNC] Husband Murdered";
             CalloutAdvisory = "A woman has dialled 911, telling her husband has been murdered in their own home!";
             CalloutPosition = calloutLocation;
-            Functions.PlayScannerAudioUsingPosition("ATTENTION_ALL_UNITS_01 WE_HAVE A_01 CRIME_DEAD_BODY_01 CODE3", calloutLocation);
+            Functions.PlayScannerAudioUsingPosition("ATTENTION_ALL_UNITS_01 WE_HAVE_01 A_01 CRIME_DEAD_BODY_01 UNITS_RESPOND_CODE_03_01", calloutLocation);
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -134,12 +141,6 @@ namespace DynamicCallouts.Callouts
 
         public override bool OnCalloutAccepted()
         {
-            Settings.RespondedCallouts++;
-            Settings.Stats.SelectSingleNode("Stats/RespondedCallouts").InnerText = Settings.RespondedCallouts.ToString();
-            Settings.Stats.Save(Settings.xmlpath);
-            Game.LogTrivial("RespondedCallouts changed new int: " + Settings.RespondedCallouts);
-            StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
-
             kitchenKnife = new Rage.Object(new Model("ch_prop_ch_bloodymachete_01a"), new Vector3(0f, 0f, 0f)); 
             bodyBag = new Rage.Object(new Model("xm_prop_body_bag"), new Vector3(0f, 0f, 0f)); 
             bodyBagForWife = new Rage.Object(new Model("xm_prop_body_bag"), new Vector3(0f, 0f, 0f)); 
@@ -283,19 +284,13 @@ namespace DynamicCallouts.Callouts
                 Game.LogTrivial(ending.ToString());
                 if (ending == 0 && wife && !HasBegunAttacking)
                 {
-                    // backstab with machete
-                    Settings.InvolvedInFights++;
-                    Settings.Stats.SelectSingleNode("Stats/InvolvedInFights").InnerText = Settings.InvolvedInFights.ToString();
-                    Settings.Stats.Save(Settings.xmlpath);
-                    StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
-
                     wife.Inventory.GiveNewWeapon("weapon_machete", -1, true);
                     wife.Tasks.FightAgainst(player);
                     Game.DisplaySubtitle("~g~Wife:~s~ I killed him, and now it's your turn! *evil laugh*");
                     while (wife.Exists() && !Functions.IsPedArrested(wife) && wife.IsAlive) GameFiber.Yield();
                     if (wife.Exists())
                     {
-                        if (Functions.IsPedArrested(wife) && wife.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Attempting to ~r~Assault an Officer."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights; }
+                        if (Functions.IsPedArrested(wife) && wife.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Attempting to ~r~Assault an Officer."); }
                         else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was unfortunately ~r~Killed~w~ for ~r~Assaulting an Officer."); }
                     }
                     GameFiber.Wait(2000);
@@ -382,10 +377,6 @@ namespace DynamicCallouts.Callouts
                 wife.Tasks.ClearImmediately();
                 if (!HasPursuitBegun)
                 {
-                    Settings.Pursuits++;
-                    Settings.Stats.SelectSingleNode("Stats/Pursuits").InnerText = Settings.Pursuits.ToString();
-                    Settings.Stats.Save(Settings.xmlpath);
-                    StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
                     pursuit = Functions.CreatePursuit();
                     if (Settings.AutomaticBackup)
                     {
@@ -397,7 +388,7 @@ namespace DynamicCallouts.Callouts
                     while (Functions.IsPursuitStillRunning(pursuit)) { GameFiber.Wait(0); }
                     if (wife.Exists())
                     {
-                        if (Functions.IsPedArrested(wife)) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Following the Pursuit."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights; }
+                        if (Functions.IsPedArrested(wife)) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ Following the Pursuit."); }
                         else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was ~r~Killed~w~ Following the Pursuit."); }
                     }
                     GameFiber.Wait(2000);
@@ -433,7 +424,7 @@ namespace DynamicCallouts.Callouts
                 }
                 if (wife.Exists())
                 {
-                    if (Functions.IsPedArrested(wife) && wife.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ For ~r~Murdering her husband~s~."); Settings.Arrests++; Settings.Stats.SelectSingleNode("Stats/Arrests").InnerText = Settings.Arrests.ToString(); Settings.Stats.Save(Settings.xmlpath); StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights; }
+                    if (Functions.IsPedArrested(wife) && wife.IsAlive) { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect is Under ~g~Arrest~w~ For ~r~Murdering her husband~s~.");}
                     else { GameFiber.Wait(1000); Game.DisplayNotification("Dispatch, a Suspect Was unfortunately ~r~Killed~w~."); }
                 }
                 GameFiber.Wait(2000);

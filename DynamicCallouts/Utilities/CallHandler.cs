@@ -172,6 +172,23 @@ namespace DynamicCallouts.Utilities
             IsDialogueDone = true;
         }
 
+        public static void Dialogue(string dialogue, Ped animped = null, String animdict = "missfbi3_party_d", String animname = "stand_talk_loop_a_male1", float animspeed = -1, AnimationFlags animflag = AnimationFlags.Loop)
+        {
+            if (Game.IsKeyDown(Settings.Dialog))
+            {
+                if (animped != null && animped.Exists())
+                {
+                    try
+                    {
+                        animped.Tasks.PlayAnimation(animdict, animname, animspeed, animflag);
+                    }
+                    catch (Exception) { }
+                }
+                Game.DisplaySubtitle(dialogue);
+            }
+            IsDialogueDone = true;
+        }
+
         public static void DialogueWithoutAnim(List<string> dialogue)
         {
             count = 0;
@@ -371,6 +388,13 @@ namespace DynamicCallouts.Utilities
         public static Ped SpawnMalePed(Vector3 position)
         {
             return new Ped(MalePedList[random.Next(0, MalePedList.Count)], position, 0f);
+        }
+
+        public static Ped SpawnMalePed(Vehicle vehicle)
+        {
+            Ped newPed = new Ped(MalePedList[random.Next(0, MalePedList.Count)], new Vector3(-2545.63f, 2316.986f, 33.21579f), 10f);
+            newPed.WarpIntoVehicle(vehicle, (int)vehicle.GetFreeSeatIndex());
+            return newPed;
         }
         
         public static Ped SpawnFemalePed(Vector3 position, float heading)

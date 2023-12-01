@@ -39,7 +39,7 @@ namespace DynamicCallouts.Callouts
             if (!Settings.LorryPursuit)
             {
                 Game.LogTrivial("[LOG]: User has disabled LorryPursuit, returning false.");
-                Game.LogTrivial("[LOG]: To enable the callout please check it in the menu or change false to true in the .ini file.");
+                Game.LogTrivial("[LOG]: To enable the callout please change false to true in the .ini file.");
                 return false;
             }
 
@@ -79,12 +79,6 @@ namespace DynamicCallouts.Callouts
             Aggressor.WarpIntoVehicle(Lorry, -1);
             Lorry.Trailer = Tanker;
 
-            Settings.RespondedCallouts++;
-            Settings.Stats.SelectSingleNode("Stats/RespondedCallouts").InnerText = Settings.RespondedCallouts.ToString();
-            Settings.Stats.Save(Settings.xmlpath);
-            Game.LogTrivial("RespondedCallouts changed new int: " + Settings.RespondedCallouts);
-            StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
-
             ABlip = Aggressor.AttachBlip();
             pursuit = Functions.CreatePursuit();
             Functions.AddPedToPursuit(pursuit, Aggressor);
@@ -93,11 +87,6 @@ namespace DynamicCallouts.Callouts
             {
                 Functions.RequestBackup(Spawnpoint, LSPD_First_Response.EBackupResponseType.Pursuit, LSPD_First_Response.EBackupUnitType.LocalUnit);
             }
-
-            Settings.Pursuits++;
-            Settings.Stats.SelectSingleNode("Stats/Pursuits").InnerText = Settings.Pursuits.ToString();
-            Settings.Stats.Save(Settings.xmlpath);
-            StatsView.textTab.Text = "Responded Callouts: " + Settings.RespondedCallouts + "~n~ ~n~Arrests performed: " + Settings.Arrests + "~n~ ~n~Times involved in pursuits: " + Settings.Pursuits + "~n~ ~n~Times Involved in fights: " + Settings.InvolvedInFights;
 
             ABlip.EnableRoute(Color.Yellow);
 

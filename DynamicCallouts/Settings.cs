@@ -11,13 +11,6 @@ namespace DynamicCallouts
 {
     internal static class Settings
     {
-        internal static XmlDocument Stats = new XmlDocument();
-        internal static string xmlpath = "Plugins/LSPDFR/DynamicCallouts/Stats.xml";
-        internal static int RespondedCallouts = 0;
-        internal static int Arrests = 0;
-        internal static int Pursuits = 0;
-        internal static int InvolvedInFights = 0;
-
         internal static bool AutomaticBackup = true;
         internal static bool HelpMessages = true;
         internal static bool IndividualShoutingAtPeople = true;
@@ -26,9 +19,9 @@ namespace DynamicCallouts
         internal static bool GarbageOnFire = true;
         internal static bool LorryPursuit = true;
         internal static bool HusbandMurdered = true;
+        internal static bool DealershipCarStolen = true;
         internal static Keys EndCall = Keys.End;
         internal static Keys Dialog = Keys.Y;
-        internal static Keys Menu;
         internal static Keys InteractionKey1 = Keys.K;
         internal static Keys InteractionKey2 = Keys.L;
         internal static Keys StopThePedKey = Keys.E;
@@ -46,7 +39,6 @@ namespace DynamicCallouts
             ini.Create();
             EndCall = ini.ReadEnum("Keys", "EndCall", Keys.End);
             Dialog = ini.ReadEnum("Keys", "Dialog", Keys.Y);
-            Menu = ini.ReadEnum("Keys", "Menu", Keys.End);
             InteractionKey1 = ini.ReadEnum("Keys", "InteractionKey1", Keys.K);
             InteractionKey2 = ini.ReadEnum("Keys", "InteractionKey2", Keys.L);
             HelpMessages = ini.ReadBoolean("Miscellaneous", "HelpMessages", true);
@@ -60,13 +52,7 @@ namespace DynamicCallouts
             GarbageOnFire = ini.ReadBoolean("Callouts", "GarbageOnFire", true);
             LorryPursuit = ini.ReadBoolean("Callouts", "LorryPursuit", true);
             HusbandMurdered = ini.ReadBoolean("Callouts", "HusbandMurdered", true);
-
-            Game.Console.Print("[LOG]: Loading Stats file from DynamicCallouts");
-            Stats.Load(xmlpath);
-            RespondedCallouts = Convert.ToInt32(Stats.SelectSingleNode("Stats/RespondedCallouts").InnerText);
-            Arrests = Convert.ToInt32(Stats.SelectSingleNode("Stats/Arrests").InnerText);
-            Pursuits = Convert.ToInt32(Stats.SelectSingleNode("Stats/Pursuits").InnerText);
-            InvolvedInFights = Convert.ToInt32(Stats.SelectSingleNode("Stats/InvolvedInFights").InnerText);
+            DealershipCarStolen = ini.ReadBoolean("Callouts", "DealerShipCarStolen", true);
 
             if (Main.STP)
             {
@@ -80,6 +66,6 @@ namespace DynamicCallouts
                 else { IsSTPKeyModifierSet = false; }
             }
         }
-        public static readonly string PluginVersion = "1.0.0.3";
+        public static readonly string PluginVersion = "1.0.0.5";
     }
 }

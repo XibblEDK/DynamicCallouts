@@ -23,7 +23,6 @@ namespace DynamicCallouts.VersionChecker
             }
             catch (WebException)
             {
-                GameFiber.Wait(35000);
                 Game.DisplayNotification("commonmenu", "mp_alerttriangle", "~w~DynamicCallouts Warning", "~r~Failed to check for an update", "Please make sure you are ~y~connected~w~ to the internet or try to ~y~reload~w~ the plugin.");
                 Game.Console.Print();
                 Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -37,7 +36,6 @@ namespace DynamicCallouts.VersionChecker
             }
             if (receivedData != Settings.PluginVersion)
             {
-                GameFiber.Wait(35000);
                 Game.DisplayNotification("commonmenu", "mp_alerttriangle", "~w~DynamicCallouts Warning", "~y~A new Update is available!", "Current Version: ~r~" + curVersion + "~w~<br>New Version: ~g~" + receivedData + "<br>~r~Please update to the latest version!");
                 Game.Console.Print();
                 Game.Console.Print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~================================================== DynamicCallouts ===================================================~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");

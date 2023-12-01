@@ -102,10 +102,8 @@
     <Compile Include="Callouts\IndividualShoutingAtPeople.cs" />
     <Compile Include="Callouts\LorryPursuit.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Menu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="StatsView.cs" />
     <Compile Include="Utilities\CallHandler.cs" />
     <Compile Include="Utilities\CalloutList.cs" />
     <Compile Include="Utilities\Marker.cs" />
